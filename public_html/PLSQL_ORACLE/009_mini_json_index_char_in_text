@@ -1,0 +1,11 @@
+-- add k.skowronski 2016-09-27
+We can connect for example four column: 'N;20;1;3' and name metod_of_amortyzation 
+and We have in one column text select 'N;20;1;3', ';' from dual
+and We can disconnect use function INSTR
+exaple:
+select 
+substr('N;20;1;3', 0, INSTR('N;20;1;3', ';',1,1)-1) col01,
+substr('N;20;1;3', INSTR('N;20;1;3', ';',1,1)+1, INSTR('N;20;1;3', ';',1,2) - INSTR('N;20;1;3', ';',1,1)-1 ) col02,
+substr('N;20;1;3', INSTR('N;20;1;3', ';',1,2)+1, INSTR('N;20;1;3', ';',1,3) - INSTR('N;20;1;3', ';',1,2)-1 ) col03,
+substr('N;20;1;3', INSTR('N;20;1;3', ';',1,3)+1) col04
+from dual
