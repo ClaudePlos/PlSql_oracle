@@ -1,0 +1,195 @@
+-- add k.skowronski 2016-09-27
+PROCEDURE GENERUJ_DOKUMENT_OT( v_sk_kod varchar2, v_nk_kod varchar2, v_data_wy date, v_cena number, v_krst varchar2, v_kl_id number, v_sdn_typ varchar2, v_nazwa_srodka varchar2,
+            v_niskocenny varchar2, 
+            v_ma_id number,
+            v_kl_stawka_od number,
+            v_podwyzszenia number  )
+  IS
+    --v_rw_id      NUMBER; -- := p_dok_id;
+    v_dok_numer_wl VARCHAR2(100);
+    v_dok_sk_id  NUMBER;
+    i            NUMBER;
+    v_wzorzec    VARCHAR2(255);
+    v_maska      VARCHAR2(255);
+    v_where      VARCHAR2(255);
+    v_rs_id      NUMBER;
+    v_jest_kod   BOOLEAN;
+	v_sk_id  NUMBER(10);
+	v_ck_id  NUMBER(10);
+    --
+    g_dok_ot         Stp_Dokumenty.t_rec_dokumenty;
+    g_lista_pd_ot    Stp_Obj_Pozycje_Dok.t_lista_pozycji;
+    g_sdn            Stp_Obj_Srodki_Dane.t_srodki_dane;
+    g_lista_sa       Stp_Obj_Sciezki_Am.t_lista_sciezek_am;
+    g_lista_ps       Stp_Obj_Podzialy_Srodka.t_lista_podzialow;
+    -- zawsze puste listy
+    g_lista_sp       Stp_Obj_Srodki_Podatki.t_lista_podatkow;
+    g_lista_sks      Stp_Obj_Skladniki_Srodka.t_lista_skladnikow;
+  BEGIN
+   
+    v_dok_numer_wl :=  null; -- TODO wstaw numer faktury kupna 
+    
+    -- buforowanie różnych rzeczy    
+    SELECT RS_ID  INTO v_rs_id FROM STT_RODZAJE_SRODKOW    WHERE RS_KOD = 'WLA'; 
+    	
+    
+      
+   
+      
+      -- 01
+	  -- Stanowisko kosztów - sprawdza to akcja która odpana niniejszą procke więc nie robie obsługi błędu 
+	  SELECT sk_id
+	  INTO v_sk_id
+      FROM css_stanowiska_kosztow
+	  WHERE sk_stan_definicji = 'Z'
+	  AND sk_kod = v_sk_kod;	
+      	  
+      -- 02 
+	  -- nośnik kosztów w ST jest Centrum kosztów - sprawdza to akcja która odpana niniejszą procke więc nie robie obsługi błędu 
+	  SELECT ck_id
+	  INTO v_ck_id
+      FROM STT_CENTRA_KOSZTOW
+	  WHERE ck_kod = v_nk_kod;	  
+	  -- Dodaje ST tylko dla towarów, które należą do odpowiedniej klasyfikacji
+      --
+      
+  
+      
+          -- nagłówek
+          g_dok_ot.dok_data_wystawienia   := v_data_wy;
+          g_dok_ot.dok_data_operacji      := v_data_wy;
+          g_dok_ot.dok_data_zaksiegowania := v_data_wy;
+          g_dok_ot.dok_rdok_kdok_kod      := 'PRZ';
+          g_dok_ot.dok_rdok_kod           := 'OT'; 
+          g_dok_ot.dok_opis               := 'ST_LTsinap->OTlogis_2016 ; '||TO_CHAR(SYSDATE, 'yyyy-mm-dd hh24:mi:ss');
+		  g_dok_ot.dok_kwota              := v_cena;		  
+          -- pozycje
+          i := 0;
+          
+          FOR sa IN (SELECT WSL_WARTOSC TYP
+                       FROM CSS_WARTOSCI_SLOWNIKOW
+                      WHERE WSL_SL_NAZWA = 'TYP SCIEZKI AM') LOOP
+            i := i + 1;
+            IF v_sdn_typ = 'Z' THEN
+			  g_lista_pd_ot(i).PD_SA_TYP             := v_sdn_typ;
+              g_lista_pd_ot(i).PD_ZMIANA_BRUTTO      := 0;
+              g_lista_pd_ot(i).PD_DZIALA_OD_DNIA     := LAST_DAY(v_data_wy)+1;
+              g_lista_pd_ot(i).PD_KWOTA_RATY_PODATKU := 0;
+              g_lista_pd_ot(i).PD_ZMIANA_UMORZENIA   := 0;
+              g_lista_pd_ot(i).PD_ZMIANA_KWOTY_NPA   := 0;
+			ELSE
+			  g_lista_pd_ot(i).PD_SA_TYP             := v_sdn_typ;
+              g_lista_pd_ot(i).PD_ZMIANA_BRUTTO      := v_cena;
+              g_lista_pd_ot(i).PD_DZIALA_OD_DNIA     := LAST_DAY(v_data_wy)+1;
+              g_lista_pd_ot(i).PD_KWOTA_RATY_PODATKU := 0;
+              g_lista_pd_ot(i).PD_ZMIANA_UMORZENIA   := 0;
+              g_lista_pd_ot(i).PD_ZMIANA_KWOTY_NPA   := 0;
+			END IF;
+          END LOOP;         
+		  --------------------------------------------------------------------------------------
+          -- dane środka ('O')
+          --------------------------------------------------------------------------------------
+       
+          --
+          g_sdn.sdn_nazwa                := v_nazwa_srodka;
+		  g_sdn.sdn_kl_id                := v_kl_id;          
+          g_sdn.sdn_rs_id                := v_rs_id;
+          g_sdn.sdn_miesiace_uzywania    := 'TTTTTTTTTTTT';
+          g_sdn.sdn_kraj_pochodzenia     := 1;
+          g_sdn.sdn_typ                  := v_sdn_typ;
+          g_sdn.sdn_data_nabycia         := v_data_wy;
+          g_sdn.sdn_wartosc_nabycia      := v_cena;
+          g_sdn.sdn_f_amortyzowany       := 'T';
+          g_sdn.sdn_f_ulga               := 'N';
+          g_sdn.sdn_f_podatek            := 'N';
+          g_sdn.sdn_f_nowy               := 'T';
+          g_sdn.sdn_typ_daty             := 'W';
+		  g_sdn.sdn_def_1                := v_dok_numer_wl;
+  		  g_sdn.sdn_def_2 				 := null;   -- DOPISANO PIOTR CHRUSCIELEWSKI
+		  g_sdn.SDN_KTM_KOD  := 'SRODKIT';
+		  --v_krst := v_kod_klasyfikacji;
+          --g_sdn.sdn_charakterystyka      := v_dok_numer_wl;
+		  --
+          v_wzorzec    := Stp_Defs.get_defw ( 'ST_WZORZEC'
+                                            , g_sdn.sdn_kl_id
+                                            , 'WP'
+                                            , 'P'
+                                            , g_sdn.sdn_kl_id);
+          v_maska      := Stp_Defs.get_defw ( 'ST_MASKA_GENERACJI'
+                                            , g_sdn.sdn_kl_id
+                                            , 'WP'
+                                            , 'P'
+                                            , g_sdn.sdn_kl_id);
+          v_where      := Stp_Defs.get_defw ( 'ST_WHERE'
+                                            , g_sdn.sdn_kl_id
+                                            , 'WP'
+                                            , 'P'
+                                            , g_sdn.sdn_kl_id);
+          g_sdn.sdn_numer_inw := Stp_Nr.gen_nr_st (
+                                 p_wzorzec          => v_wzorzec,
+                                 p_wzorzec_szukania => v_maska,
+                                 p_where            => v_where,
+                                 p_krst             => v_krst,
+                                 p_rok              => TO_CHAR(v_data_wy, 'yyyy'),
+                                 p_miesiac          => TO_CHAR(v_data_wy, 'mm'),
+                                 p_typ              => v_sdn_typ, --'S', --wstawić 'P'
+                                 p_rodzaj           => 'WP',
+                                 p_niskocenny       => 'N',
+                                 p_sk_kod           => v_sk_kod,
+                                 p_kl_id            => g_sdn.sdn_kl_id,
+                                 p_sk_id            => v_dok_sk_id);
+          --------------------------------------------------------------------------------------
+          -- lista sa
+          --------------------------------------------------------------------------------------
+          i := 0;
+          FOR sa IN (SELECT WSL_WARTOSC TYP
+                       FROM CSS_WARTOSCI_SLOWNIKOW
+                      WHERE WSL_SL_NAZWA = 'TYP SCIEZKI AM') LOOP
+            i := i + 1;
+            g_lista_sa(i).SA_TYP               := v_sdn_typ;
+            g_lista_sa(i).SA_ILOSC_OKRESOW     := '12';  
+                      
+			 
+			  g_lista_sa(i).SA_F_NISKOCENNY    := v_niskocenny; 			  
+              g_lista_sa(i).SA_MA_ID           := v_ma_id; --id metody amortyzacji liniowej z stt_metody_amort
+              g_lista_sa(i).SA_ILOSC_MIESIECY  := NULL; 
+			  g_lista_sa(i).SA_STAWKA            := v_kl_stawka_od;  --dolna z klas KST
+              g_lista_sa(i).SA_WSP_PODWYZSZENIA  := v_podwyzszenia;
+			            
+          END LOOP;
+          --------------------------------------------------------------------------------------
+          -- lista podziałów
+          --------------------------------------------------------------------------------------
+          g_lista_ps(1).PS_PROCENT := 100;
+          g_lista_ps(1).PS_SK_ID   := v_sk_id;
+          g_lista_ps(1).PS_MU_ID   := NULL;
+          g_lista_ps(1).PS_CK_ID   := v_ck_id;  
+          g_lista_ps(1).PS_PRC_ID  := NULL;
+		  -- wstawienie tego dokumentu
+          Stp_Dokumenty.wstaw(g_dok_ot
+                             ,g_lista_pd_ot
+                             ,g_sdn
+                             ,g_lista_sa
+                             ,g_lista_ps
+                             ,g_lista_sks
+                             ,g_lista_sp);
+		--  p_dok_id_ot := g_dok_ot.dok_id;
+          -- zatwierdzenie dokumentu
+         
+		  --Kgp_Operacje.zatwierdz (g_dok_ot.dok_id);
+          -- wyczyszczenie zmiennych
+          g_dok_ot := NULL;
+          g_lista_pd_ot.DELETE;
+          g_sdn    := NULL;
+          g_lista_sa.DELETE;
+          g_lista_ps.DELETE;
+          g_lista_sp.DELETE;
+          g_lista_sks.DELETE;	
+          	  
+       
+        
+      
+      
+  
+    
+  END GENERUJ_DOKUMENT_OT; 
