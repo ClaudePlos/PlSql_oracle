@@ -1,1 +1,2 @@
 
+(select ck_kod from STT_PODZIALY_SRODKA, stt_centra_kosztow where ps_ck_id = ck_id and ps_sdn_s_id = sdn_s_id and ps_sdn_id = sdn_id) ck, 
