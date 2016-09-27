@@ -1,0 +1,72 @@
+---- add ks 2016-04-25
+-- TODO
+
+begin
+eap_globals.USTAW_firme(1);
+eap_globals.USTAW_konsolidacje('N');
+end;
+
+begin
+eap_globals.USTAW_konsolidacje('T');
+end;
+
+
+select a.*,
+(
+select  ks_kwota from kgt_ksiegowania, kg_konta 
+where to_char(ks_dok_data_zaksiegowania,'YYYY-MM') =  to_char(dok_data_operacji,'YYYY-MM')
+and (ks_knt_wn = knt_id or ks_knt_ma = knt_id) 
+AND (ks_f_zaksiegowany = 'T' or ks_f_symulacja = 'T') 
+and ks_tresc like '%'||numer_inw||'%'
+and knt_pelny_numer like '760%' 
+) rata_na_760
+ from (
+select (select sdn_numer_inw from stt_srodki_dane where sdn_id = PD_SA_SDN_ID ) numer_inw
+, pd_zmiana_umorzenia, dok_data_operacji 
+from STT_POZYCJE_DOK, kgt_dokumenty
+where pd_dok_id = dok_id
+and dok_rdok_kod = 'RAN'
+and dok_data_operacji between '2016-03-01' and '2015-03-31'
+order by 1, dok_data_operacji) a
+
+begin
+eap_globals.USTAW_firme(1);
+eap_globals.USTAW_konsolidacje('N');
+end;
+
+
+---- add ks 2016-04-25
+---- wyslane dla a.wladysiak
+select a.* ,
+(
+select sum(ks_kwota)--ks_kwota, knt_pelny_numer, ks_dok_data_zaksiegowania, ks_tresc 
+from kgt_ksiegowania, kg_konta
+where (ks_knt_wn = knt_id or ks_knt_ma = knt_id) 
+AND (ks_f_zaksiegowany = 'T' or ks_f_symulacja = 'T') 
+and ks_tresc like '%'||numer_inw||'%'
+and (knt_pelny_numer = '760-01-01' or knt_pelny_numer = '760-02') 
+) rata_na_760, (
+select sum(ks_kwota)--ks_kwota, knt_pelny_numer, ks_dok_data_zaksiegowania, ks_tresc 
+from kgt_ksiegowania_archiwalne, kg_konta 
+where (ks_knt_wn = knt_id or ks_knt_ma = knt_id) 
+AND (ks_f_zaksiegowany = 'T' or ks_f_symulacja = 'T') 
+and ks_tresc like '%'||numer_inw||'%'
+and (knt_pelny_numer = '760-01-01' or knt_pelny_numer = '760-02') 
+) rata_na_760_arch
+from (
+select (select sdn_numer_inw from stt_srodki_dane where sdn_id = PD_SA_SDN_ID ) numer_inw
+,  (select sdn_nazwa from stt_srodki_dane where sdn_id = PD_SA_SDN_ID ) nazwa
+, pd_zmiana_brutto brutto
+, dok_data_operacji
+, stp_oblicz.UMORZENIE_S(pd_sa_sdn_s_id,'2016-08-31') umorzenie_bilansowa
+, stp_oblicz.umorzenie_okr (pd_sa_sdn_s_id,'2001-01-01','2016-08-31', 'Z', null, null) sciezka_ZFRON
+, (select frm_nazwa from eat_firmy where dok_frm_id = frm_id) firma
+ from STT_POZYCJE_DOK, kgt_dokumenty  
+where pd_sa_typ = 'Z'and pd_zmiana_brutto != 0
+and pd_dok_id = dok_id and dok_rdok_kod in ('OT','OTW','OTBO')
+order by 1
+) a
+order by firma, numer_inw
+--where umorzenie != 0
+
+

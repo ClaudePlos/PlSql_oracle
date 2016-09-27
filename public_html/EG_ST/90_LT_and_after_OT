@@ -76,12 +76,14 @@ eap_globals.USTAW_konsolidacje('N');
 end;
 
 
+					   
 declare 
 begin 
 for rek in (
 select * from (
 SELECT SDN_NUMER_INW,SDN_S_ID,SDN_kod_kreskowy, SDN_WARTOSC_NABYCIA,
 stp_oblicz.NETTO_S(sdn_s_id, '2016-09-30') netto,
+stp_oblicz.umorzenie_okr(sdn_s_id, SDN_DATA_NABYCIA, sysdate, 'Z', null, null) zfron,
 case when (SELECT count(1) FROM stv_dokumenty WHERE dok_sdn_s_id = sdn_s_id AND dok_rdok_kdok_kod = 'LT' AND dok_f_zatwierdzony = 'T' AND dok_f_anulowany = 'N' AND dok_f_korekta = 'N') > 0 then 'T' else 'N' end czy_zlikwidowany,
 stp_utl.DOMYSLNA_SA_WART(sdn_s_id) sciezka,
 (select sk_kod from STT_PODZIALY_SRODKA, css_stanowiska_kosztow where ps_sk_id = sk_id and ps_sdn_s_id = sdn_s_id and ps_sdn_id = sdn_id) sk, 
@@ -103,27 +105,13 @@ and (SDN_NUMER_INW LIKE '5%')
 order by SDN_NUMER_INW ASC)
 where netto != 0
 and czy_zlikwidowany = 'N'
-and sdn_numer_inw = '557-033047'
+and sdn_numer_inw = '599-000025'
 )
 loop
 -- p_st_id NUMBER -> sdn_s_id , data_operacji DATE, data_wystawienia DATE,  uzytkownik VARCHAR2, opis VARCHAR2
-naprzod2.napwf_log_st.generuj_lt_dla_srodka( rek.sdn_s_id, '2016-09-30', '2016-09-30', 'klaudiusz.skowronski','ST_LTsinap->OTlogis_2016');
+egadm1.nap_Srodki_Trwale.generuj_LTS_dla_srodka( rek.sdn_s_id, '2016-09-30', '2016-09-30', 'klaudiusz.skowronski','ST_LTsinap->OTlogis_2016');
 end loop;
 end;
 
 commit
 
-
-    /** Okreslam miejsca uzywania **/
-  SELECT ps_mu_id --INTO l_mu_id 
-  FROM ( 
-    SELECT ps_mu_id FROM stt_podzialy_srodka  WHERE ps_sdn_s_id = 161498 ORDER BY ps_id DESC) 
-    WHERE ROWNUM = 1 ;
-  
-  SELECT sk_id --INTO l_sk_id 
-  FROM 
-  css_stanowiska_kosztow, stt_miejscA_uzywania
-  WHERE mu_kod = sk_kod
-  AND mu_id = 110508
-  
-  select * from stt_miejsca_uzywania where mu_id = 110508
