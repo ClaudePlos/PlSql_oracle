@@ -1,0 +1,32 @@
+declare 
+begin 
+for rek in (
+select * from (
+SELECT SDN_NUMER_INW,SDN_S_ID,SDN_kod_kreskowy, SDN_WARTOSC_NABYCIA,
+stp_oblicz.NETTO_S(sdn_s_id, '2016-09-30') netto,
+case when (SELECT count(1) FROM stv_dokumenty WHERE dok_sdn_s_id = sdn_s_id AND dok_rdok_kdok_kod = 'LT' AND dok_f_zatwierdzony = 'T' AND dok_f_anulowany = 'N' AND dok_f_korekta = 'N') > 0 then 'T' else 'N' end czy_zlikwidowany,
+stp_utl.DOMYSLNA_SA_WART(sdn_s_id) sciezka,
+(select sk_kod from STT_PODZIALY_SRODKA, css_stanowiska_kosztow where ps_sk_id = sk_id and ps_sdn_s_id = sdn_s_id and ps_sdn_id = sdn_id) sk, 
+RS_KOD,RS_NAZWA,SDN_NAZWA,KRST,
+KL_NAZWA_RODZAJOWA,SDN_TYP,SDN_KRAJ_POCHODZENIA,SDN_DATA_NABYCIA,
+SDN_DATA_PRZEKAZANIA,
+SDN_NR_FABRYCZNY,
+SDN_CHARAKTERYSTYKA,
+SDN_MIESIACE_UZYWANIA,SDN_UM_ID,SDN_KL_ID,RS_ID,SDN_ID,SDN_KTM_KOD,UM_NUMER,
+kl_skrot 
+FROM STV_SRODKI_DANE 
+WHERE '2016-09-30' between sts_data_od and sts_data_do 
+and sts_typ_daty = 'W' 
+and sdn_ktm_kod =  'SRODKIT' 
+--AND exists (select 1 from dual where 0 
+--= GREATEST(stp_oblicz.brutto_s (sdn_s_id, stp_globals.wybrana_data, NVL(stp_utl.domyslna_sa_wart(sdn_s_id),'$'))-stp_oblicz.umorzenie_s (sdn_s_id, stp_globals.wybrana_data, NVL(stp_utl.domyslna_sa_wart(sdn_s_id),'$')),0)) 
+and (SDN_NUMER_INW LIKE '5%') 
+--and sdn_data_przekazania is null
+order by SDN_NUMER_INW ASC)
+where netto != 0
+and czy_zlikwidowany = 'N'
+and sdn_numer_inw = '557-033047')
+loop
+
+end loop;
+end;
