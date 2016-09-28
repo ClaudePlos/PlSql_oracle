@@ -1,0 +1,244 @@
+-- add k.skowronski 2014-03-09
+-- great package
+-- 1. Czesc Normalny DOK
+-- 2. Czesc WB i przelewy
+
+--ustawia kontekst na jedna firme:
+begin
+eap_globals.USTAW_firme(300201);
+eap_globals.USTAW_konsolidacje('N');
+end;
+
+--ustawia kontekst na wszytskie firmy:
+begin
+eap_globals.USTAW_konsolidacje('T');
+end;
+
+4180600
+
+-- rozłaczanie płatnosci
+nzp_platnosci.rozlacz_platnosci(rek.pl_id, null);
+
+commit
+
+begin
+eap_globals.USTAW_firme(300000);
+eap_globals.USTAW_konsolidacje('N');
+end;
+
+-- 1.
+declare
+begin
+for rek in (
+select * from nzt_platnosci where pl_dok_id in 
+(
+select dok_id 
+from kgt_dokumenty where dok_numer_wlasny like 'PP/RAIFI/09/16/%' and dok_opis is not null and dok_data_wystawienia = '2016-09-01'
+and dok_f_system_bankowy_import = 'N' and dok_data_zaksiegowania is null and DOK_F_SYSTEM_BANKOWY_EKSPORT = 'N'
+)
+and pl_data = '2016-09-01'
+)
+loop
+nzp_platnosci.rozlacz_platnosci(rek.pl_id, null);
+end loop;
+end;
+
+commit
+
+
+begin
+eap_globals.USTAW_firme(300199);
+eap_globals.USTAW_konsolidacje('N');
+end;
+
+-- 2.
+/*
+
+*/
+
+declare
+begin
+for rek in (
+select dok_id 
+from kgt_dokumenty where dok_numer_wlasny like 'PP/RAIFI/09/16/%' and dok_opis is not null and dok_data_wystawienia = '2016-09-01'
+and dok_f_system_bankowy_import = 'N' and dok_data_zaksiegowania is null and DOK_F_SYSTEM_BANKOWY_EKSPORT = 'N'
+)
+loop
+--kgp_operacje.WYCOFAJ_ZATWIERDZENIE(rek.dok_id,'Powód');
+css_pck_numery.nadaj_numer_null ( p_dok_id => rek.dok_id ,
+	                                     p_opcje => 3 /* c_numopt_zamien */,
+	                                     p_nieciaglosc_numerow => true -- pozwalaj na nieicaglosc numeracji
+	                                     ) ;
+end loop;
+end;
+
+commit
+
+
+
+   -- weryfikuje
+   kgp_operacje.KSIEGUJ(vDokIdPK, vDokDataKsPk, 'W','T');
+   
+   --cofa weryfikacje 
+   kgp_operacje.KSIEGUJ(vDokIdPK, vDokDataKsPk, 'C','T');
+   
+   -- wycofanie zatwierdzenia 
+   kgp_operacje.WYCOFAJ_ZATWIERDZENIE(dok_id,'Powód');
+   
+   
+-- wywalenie numerów z dokumentu
+ css_pck_numery.nadaj_numer_null ( p_dok_id => g_dok_id ,
+	                                     p_opcje => 3 /* c_numopt_zamien */,
+	                                     p_nieciaglosc_numerow => true -- pozwalaj na nieicaglosc numeracji
+	                                     ) ;   
+   
+   
+begin
+eap_globals.USTAW_firme(300038);
+eap_globals.USTAW_konsolidacje('N');
+end;
+
+commit
+
+
+-- wycofanie weryfikacji dla dok 
+begin
+for rek in (
+select * from kgt_dokumenty where dok_numer_wlasny like 'PKPZ%' and dok_f_symulacja = 'T' and dok_def_6 = 'PLOCK'
+)
+loop
+kgp_operacje.KSIEGUJ(rek.dok_id, rek.dok_data_zaksiegowania, 'C','T');
+end loop;
+end;
+
+commit
+
+
+-- wycofanie zatwierdzenia dla dok 
+begin
+for rek in (
+select * from kgt_dokumenty where dok_numer_wlasny like 'PKPZ%' and dok_f_zatwierdzony = 'T' and dok_def_6 = 'PLOCK'
+)
+loop
+kgp_operacje.WYCOFAJ_ZATWIERDZENIE(rek.dok_id,'KS');
+end loop;
+end;
+
+-- usunicie numeracij dla dok 
+begin
+for rek in (
+select * from kgt_dokumenty where dok_numer_wlasny like 'PKPZ%' and dok_def_6 = 'PLOCK'
+)
+loop
+css_pck_numery.nadaj_numer_null ( rek.dok_id, 3 , true ) ;
+end loop;
+end;
+
+
+-- rozlaczanie platnosci dla dokumentów wielu
+declare
+begin
+for rek in (
+select * from kgt_dokumenty, nzt_platnosci 
+where pl_dok_id = dok_id
+and dok_rdok_kod = 'PP'
+and pl_f_rozliczona = 'T'
+and dok_data_operacji = '2014-11-04')
+loop
+nzp_platnosci.rozlacz_platnosci(rek.pl_id, null);
+end loop;
+end;
+
+
+
+-- usuwanie pozycji
+
+select * from fa_pozycje where rowid = 'AAAH6IAAeAAAQxWAAQ'
+
+declare
+v_status boolean;
+begin
+for rek in ( select pf_id from fa_pozycje where pf_dok_id = 2835807)
+loop 
+FA_PCK_FRM_DOK.USUN_POZYCJE(rek.pf_id,v_status);
+end loop;
+end;
+
+commit
+
+-- usuwanie dokumentow
+
+begin
+nzp_dokument.usun (:dokID);
+end;
+
+commit
+
+kgt_dokumenty
+
+
+fati_sp_pf
+
+
+---- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+-- sa dwa sposoby 1- odpinanie 2-usuwanie 
+
+---- 1 - odpinainie 
+---- PP/INGBS/11/15/1733
+
+begin
+for rek in (
+select * from kgt_dokumenty where dok_dok_id_zap = 4206146 -- wstawiamy id WB i mamy dokumenty podpiete
+)
+loop
+nzp_wyciagi.odlacz_od_wyciagu(rek.dok_id);
+end loop;
+end;
+
+commit
+
+
+---- 2 czesc WB - usuwanie 
+begin
+eap_globals.USTAW_firme(300199);
+eap_globals.USTAW_konsolidacje('N');
+end;
+
+commit
+
+-- WB wyciąg bankowy
+-- 1. przed rcznie trzeba rozłączyć rozrachunki
+-- 1. wycofanie zatwierdzenia dla dok 
+begin
+for rek in (
+select * from kgt_dokumenty where dok_dok_id_zap = 3890407 -- wstawiamy id WB i mamy dokumenty podpiete
+)
+loop
+kgp_operacje.WYCOFAJ_ZATWIERDZENIE(rek.dok_id,'KS');
+end loop;
+end;
+
+commit;
+
+
+-- 2. delete number on dok 
+begin
+for rek in (
+select * from kgt_dokumenty where dok_dok_id_zap = 3890407
+)
+loop
+css_pck_numery.nadaj_numer_null ( rek.dok_id, 3 , true ) ;
+end loop;
+end;
+
+--3. usuwanie pozycji WB
+begin
+for rek in (
+select * from kgt_dokumenty where dok_dok_id_zap = 3890407
+)
+loop
+nzp_dokument.usun (rek.dok_id); 
+end loop;
+end;
+
+commit

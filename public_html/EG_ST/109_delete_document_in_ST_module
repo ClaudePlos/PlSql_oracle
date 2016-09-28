@@ -1,0 +1,11 @@
+-- add k.skowronski 2016-09-28
+-- delete doc
+declare 
+begin
+for rek in (
+select * from kgt_dokumenty where dok_opis = 'ST_LTsinap->OTlogis_2016'
+)
+loop
+stp_dokumenty.usun (rek.dok_id);
+end loop;
+end;
