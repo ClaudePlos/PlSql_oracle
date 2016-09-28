@@ -1,6 +1,7 @@
 -- add k.skowronski 2016-09-27
-PROCEDURE GENERUJ_DOKUMENT_OT( v_sk_kod varchar2, v_nk_kod varchar2, v_data_wy date, v_cena number, v_krst varchar2, v_kl_id number, v_sdn_typ varchar2, v_nazwa_srodka varchar2,
-            v_niskocenny varchar2, 
+PROCEDURE GENERUJ_DOKUMENT_OT( v_sk_kod varchar2, v_nk_kod varchar2, v_mu_kod varchar2, v_data_wy date, v_cena number, v_krst varchar2, v_kl_id number, v_sdn_typ varchar2, v_nazwa_srodka varchar2
+        , v_charakterystyka varchar2, v_jm_id number, v_nr_fabryczny varchar2,
+            v_niskocenny varchar2,  
             v_ma_id number,
             v_kl_stawka_od number,
             v_podwyzszenia number  )
@@ -16,6 +17,7 @@ PROCEDURE GENERUJ_DOKUMENT_OT( v_sk_kod varchar2, v_nk_kod varchar2, v_data_wy d
     v_jest_kod   BOOLEAN;
 	v_sk_id  NUMBER(10);
 	v_ck_id  NUMBER(10);
+    v_mu_id  NUMBER(10);
     --
     g_dok_ot         Stp_Dokumenty.t_rec_dokumenty;
     g_lista_pd_ot    Stp_Obj_Pozycje_Dok.t_lista_pozycji;
@@ -49,7 +51,14 @@ PROCEDURE GENERUJ_DOKUMENT_OT( v_sk_kod varchar2, v_nk_kod varchar2, v_data_wy d
 	  SELECT ck_id
 	  INTO v_ck_id
       FROM STT_CENTRA_KOSZTOW
-	  WHERE ck_kod = v_nk_kod;	  
+	  WHERE ck_kod = v_nk_kod;	
+      
+      SELECT mu_id
+	  INTO v_mu_id
+      FROM STT_MIEJSCA_UZYWANIA 
+	  WHERE mu_kod = v_mu_kod;
+      
+        
 	  -- Dodaje ST tylko dla towarów, które należą do odpowiedniej klasyfikacji
       --
       
@@ -68,17 +77,19 @@ PROCEDURE GENERUJ_DOKUMENT_OT( v_sk_kod varchar2, v_nk_kod varchar2, v_data_wy d
           
           FOR sa IN (SELECT WSL_WARTOSC TYP
                        FROM CSS_WARTOSCI_SLOWNIKOW
-                      WHERE WSL_SL_NAZWA = 'TYP SCIEZKI AM') LOOP
+                      WHERE WSL_SL_NAZWA = 'TYP SCIEZKI AM') 
+          LOOP
             i := i + 1;
-            IF v_sdn_typ = 'Z' THEN
-			  g_lista_pd_ot(i).PD_SA_TYP             := v_sdn_typ;
+            IF sa.typ = 'Z' THEN
+              -- null;
+			  g_lista_pd_ot(i).PD_SA_TYP             := sa.typ; -- jak ZFRON to odhaszuj
               g_lista_pd_ot(i).PD_ZMIANA_BRUTTO      := 0;
               g_lista_pd_ot(i).PD_DZIALA_OD_DNIA     := LAST_DAY(v_data_wy)+1;
               g_lista_pd_ot(i).PD_KWOTA_RATY_PODATKU := 0;
               g_lista_pd_ot(i).PD_ZMIANA_UMORZENIA   := 0;
               g_lista_pd_ot(i).PD_ZMIANA_KWOTY_NPA   := 0;
 			ELSE
-			  g_lista_pd_ot(i).PD_SA_TYP             := v_sdn_typ;
+			  g_lista_pd_ot(i).PD_SA_TYP             := sa.typ;
               g_lista_pd_ot(i).PD_ZMIANA_BRUTTO      := v_cena;
               g_lista_pd_ot(i).PD_DZIALA_OD_DNIA     := LAST_DAY(v_data_wy)+1;
               g_lista_pd_ot(i).PD_KWOTA_RATY_PODATKU := 0;
@@ -108,7 +119,9 @@ PROCEDURE GENERUJ_DOKUMENT_OT( v_sk_kod varchar2, v_nk_kod varchar2, v_data_wy d
   		  g_sdn.sdn_def_2 				 := null;   -- DOPISANO PIOTR CHRUSCIELEWSKI
 		  g_sdn.SDN_KTM_KOD  := 'SRODKIT';
 		  --v_krst := v_kod_klasyfikacji;
-          --g_sdn.sdn_charakterystyka      := v_dok_numer_wl;
+          g_sdn.sdn_charakterystyka      := v_charakterystyka;
+          g_sdn.sdn_jm_id                := v_jm_id;
+          g_sdn.sdn_nr_fabryczny         := v_nr_fabryczny;
 		  --
           v_wzorzec    := Stp_Defs.get_defw ( 'ST_WZORZEC'
                                             , g_sdn.sdn_kl_id
@@ -144,9 +157,10 @@ PROCEDURE GENERUJ_DOKUMENT_OT( v_sk_kod varchar2, v_nk_kod varchar2, v_data_wy d
           i := 0;
           FOR sa IN (SELECT WSL_WARTOSC TYP
                        FROM CSS_WARTOSCI_SLOWNIKOW
-                      WHERE WSL_SL_NAZWA = 'TYP SCIEZKI AM') LOOP
+                      WHERE WSL_SL_NAZWA = 'TYP SCIEZKI AM')  -- jak ZFRON to usun  and WSL_WARTOSC != 'Z'
+          LOOP
             i := i + 1;
-            g_lista_sa(i).SA_TYP               := v_sdn_typ;
+            g_lista_sa(i).SA_TYP               := sa.typ;
             g_lista_sa(i).SA_ILOSC_OKRESOW     := '12';  
                       
 			 
@@ -162,15 +176,15 @@ PROCEDURE GENERUJ_DOKUMENT_OT( v_sk_kod varchar2, v_nk_kod varchar2, v_data_wy d
           --------------------------------------------------------------------------------------
           g_lista_ps(1).PS_PROCENT := 100;
           g_lista_ps(1).PS_SK_ID   := v_sk_id;
-          g_lista_ps(1).PS_MU_ID   := NULL;
+          g_lista_ps(1).PS_MU_ID   := v_mu_id;
           g_lista_ps(1).PS_CK_ID   := v_ck_id;  
           g_lista_ps(1).PS_PRC_ID  := NULL;
 		  -- wstawienie tego dokumentu
           Stp_Dokumenty.wstaw(g_dok_ot
-                             ,g_lista_pd_ot
+                             ,g_lista_pd_ot --
                              ,g_sdn
                              ,g_lista_sa
-                             ,g_lista_ps
+                             ,g_lista_ps --
                              ,g_lista_sks
                              ,g_lista_sp);
 		--  p_dok_id_ot := g_dok_ot.dok_id;
@@ -192,4 +206,5 @@ PROCEDURE GENERUJ_DOKUMENT_OT( v_sk_kod varchar2, v_nk_kod varchar2, v_data_wy d
       
   
     
-  END GENERUJ_DOKUMENT_OT; 
+  END GENERUJ_DOKUMENT_OT;  
+ 
