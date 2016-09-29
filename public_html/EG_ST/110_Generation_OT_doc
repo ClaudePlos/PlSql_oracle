@@ -1,4 +1,5 @@
 -- add k.skowronski 2016-09-27
+-- update
 PROCEDURE GENERUJ_DOKUMENT_OT( v_sk_kod varchar2, v_nk_kod varchar2, v_mu_kod varchar2, v_data_wy date, v_cena number, v_krst varchar2, v_kl_id number, v_sdn_typ varchar2, v_nazwa_srodka varchar2
         , v_charakterystyka varchar2, v_jm_id number, v_nr_fabryczny varchar2,
             v_niskocenny varchar2,  
@@ -43,15 +44,19 @@ PROCEDURE GENERUJ_DOKUMENT_OT( v_sk_kod varchar2, v_nk_kod varchar2, v_mu_kod va
 	  SELECT sk_id
 	  INTO v_sk_id
       FROM css_stanowiska_kosztow
-	  WHERE sk_stan_definicji = 'Z'
-	  AND sk_kod = v_sk_kod;	
+	  WHERE sk_kod = v_sk_kod;	
       	  
       -- 02 
 	  -- nośnik kosztów w ST jest Centrum kosztów - sprawdza to akcja która odpana niniejszą procke więc nie robie obsługi błędu 
+      BEGIN
 	  SELECT ck_id
 	  INTO v_ck_id
       FROM STT_CENTRA_KOSZTOW
 	  WHERE ck_kod = v_nk_kod;	
+      EXCEPTION
+      WHEN NO_DATA_FOUND THEN
+        v_ck_id := null;
+      END;
       
       SELECT mu_id
 	  INTO v_mu_id
@@ -70,7 +75,7 @@ PROCEDURE GENERUJ_DOKUMENT_OT( v_sk_kod varchar2, v_nk_kod varchar2, v_mu_kod va
           g_dok_ot.dok_data_zaksiegowania := v_data_wy;
           g_dok_ot.dok_rdok_kdok_kod      := 'PRZ';
           g_dok_ot.dok_rdok_kod           := 'OT'; 
-          g_dok_ot.dok_opis               := 'ST_LTsinap->OTlogis_2016 ; '||TO_CHAR(SYSDATE, 'yyyy-mm-dd hh24:mi:ss');
+          g_dok_ot.dok_opis               := 'ST_LTsinap->OTlogis_2016';
 		  g_dok_ot.dok_kwota              := v_cena;		  
           -- pozycje
           i := 0;
@@ -117,6 +122,7 @@ PROCEDURE GENERUJ_DOKUMENT_OT( v_sk_kod varchar2, v_nk_kod varchar2, v_mu_kod va
           g_sdn.sdn_typ_daty             := 'W';
 		  g_sdn.sdn_def_1                := v_dok_numer_wl;
   		  g_sdn.sdn_def_2 				 := null;   -- DOPISANO PIOTR CHRUSCIELEWSKI
+          g_sdn.sdn_def_10 				 := 'T';
 		  g_sdn.SDN_KTM_KOD  := 'SRODKIT';
 		  --v_krst := v_kod_klasyfikacji;
           g_sdn.sdn_charakterystyka      := v_charakterystyka;
@@ -179,12 +185,16 @@ PROCEDURE GENERUJ_DOKUMENT_OT( v_sk_kod varchar2, v_nk_kod varchar2, v_mu_kod va
           g_lista_ps(1).PS_MU_ID   := v_mu_id;
           g_lista_ps(1).PS_CK_ID   := v_ck_id;  
           g_lista_ps(1).PS_PRC_ID  := NULL;
+          
+          -- skladniki
+          g_lista_sks(1).SKS_dok_id := null; -- TODO id dokumentu sprzedazy
+          
 		  -- wstawienie tego dokumentu
           Stp_Dokumenty.wstaw(g_dok_ot
-                             ,g_lista_pd_ot --
+                             ,g_lista_pd_ot 
                              ,g_sdn
                              ,g_lista_sa
-                             ,g_lista_ps --
+                             ,g_lista_ps 
                              ,g_lista_sks
                              ,g_lista_sp);
 		--  p_dok_id_ot := g_dok_ot.dok_id;
@@ -207,4 +217,3 @@ PROCEDURE GENERUJ_DOKUMENT_OT( v_sk_kod varchar2, v_nk_kod varchar2, v_mu_kod va
   
     
   END GENERUJ_DOKUMENT_OT;  
- 

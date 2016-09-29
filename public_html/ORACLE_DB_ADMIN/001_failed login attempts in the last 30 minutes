@@ -1,0 +1,31 @@
+-- add ks - 2014-08-01
+-- error There have been 1544 failed login attempts in the last 30 minutes
+-- ORA-28000: the account is locked tips
+-- RETURNCODE - kolumna informuje o błedzie ora jak wystąpi przy logowaniu
+
+
+-- 01. Tabela kto kiedy sie zalogowal i wylogowal
+select OS_USERNAME, USERNAME, USERHOST, TERMINAL, TIMESTAMP, ACTION_NAME, LOGOFF_TIME, LOGOFF_LREAD, LOGOFF_PREAD
+, LOGOFF_LWRITE, LOGOFF_DLOCK, SESSIONID, RETURNCODE, CLIENT_ID, SESSION_CPU, PROXY_SESSIONID, GLOBAL_UID, INSTANCE_NUMBER, OS_PROCESS
+from DBA_AUDIT_SESSION where username = 'ADMIN'
+
+-- 02. Sprawdzenie ko i ile razy si logował w danym dniu
+select USERNAME,ACTION_NAME,RETURNCODE,count(*) 
+from DBA_AUDIT_SESSION 
+where TIMESTAMP >= '2014-08-01'
+and TIMESTAMP <='2014-08-02'
+and RETURNCODE !=0 
+group by USERNAME,ACTION_NAME,RETURNCODE  order by count(*);
+
+-- 03 select pomidzy godzinami w dacie
+select OS_USERNAME, USERNAME, USERHOST, TERMINAL, TIMESTAMP, ACTION_NAME, LOGOFF_TIME, LOGOFF_LREAD, LOGOFF_PREAD
+, LOGOFF_LWRITE, LOGOFF_DLOCK, SESSIONID, RETURNCODE, CLIENT_ID, SESSION_CPU, PROXY_SESSIONID, GLOBAL_UID, INSTANCE_NUMBER, OS_PROCESS 
+--USERNAME,ACTION_NAME,RETURNCODE, TIMESTAMP--,count(*) 
+from DBA_AUDIT_SESSION 
+where TIMESTAMP between to_date('2014-08-01 01:57:21','YYYY-MM-DD hh24:mi:ss') and to_date('2014-08-01 02:27:21','YYYY-MM-DD hh24:mi:ss') 
+--and to_char(TIMESTAMP, 'YYYY-MM-DD') >= '2014-08-01 00:27:21'
+--and TIMESTAMP <= '2014-08-01 02:27:21'
+--and username = 'NAPRZOD'
+and RETURNCODE !=0 
+order by timestamp 
+--group by USERNAME,ACTION_NAME,RETURNCODE  order by count(*) 

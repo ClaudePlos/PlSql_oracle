@@ -1,0 +1,28 @@
+-- add k.skowronski 2016-09-01
+CSSV_RAPORTY_UZYTKOWNIKOW
+
+
+-- a list od user raprots 
+SELECT RAP_NAZWA "Nazwa raportu",rap_owner "Własciciel",RAP_OPIS "Opis",UZ_LOGIN "Użytkownik" 
+FROM CSSV_RAPORTY_UZYTKOWNIKOW  
+WHERE uz_login = :p_user
+
+-- better select
+SELECT UZ_LOGIN "Użytkownik"
+, uzt_imie
+, uzt_nazwisko1
+, RAP_NAZWA "Nazwa raportu",rap_owner "Własciciel",RAP_OPIS "Opis" 
+FROM CSSV_RAPORTY_UZYTKOWNIKOW, EAT_UZYTKOWNICY
+WHERE uz_login = uzt_nazwa
+and uz_login not in  ('ADMIN','TEST')
+order by uz_login, rap_nazwa
+
+-- tables:
+krt_raporty
+KRT_SZCZEGOLY_RAPORTOW
+
+krt_uzytkownicy 
+krv_uprawnienia
+         
+         
+         

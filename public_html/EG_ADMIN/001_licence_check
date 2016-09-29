@@ -1,0 +1,68 @@
+
+
+SELECT   frm_nazwa "Firma", a.username "Login", e.uzt_imie "Imie", e.uzt_nazwisko1 "Nazwisko",
+        e.uzt_mail "e-mail",
+        DECODE (a.account_status,
+                'OPEN', '- nie -',
+                'zablok. lub haslo wygaslo'
+               ) "Zablokowany w bazie Oracle?",
+        e.uzt_f_zablokowany "Zablokowany w EA?", p.prf_nazwa "Profil EA"
+   FROM SYS.dba_users a,
+        eat_uzytkownicy e,
+        eat_firmy f,
+        eat_dostepy_do_firm d,
+        eat_profile p
+  WHERE e.uzt_nazwa = a.username
+    AND prf_frm_id = frm_id
+    AND d.ddf_prf_id = p.prf_id
+    AND d.ddf_uzt_nazwa = e.uzt_nazwa
+    AND uzt_f_zablokowany = 'N'
+    AND uzt_f_usuniety = 'N'
+ORDER BY 1, 2
+
+ 
+
+SELECT  distinct frm_nazwa "Firma", apl_symbol "Aplikacja", a.username "Login", e.uzt_imie "Imie", e.uzt_nazwisko1 "Nazwisko",
+        e.uzt_mail "e-mail",
+        DECODE (a.account_status,
+                'OPEN', '- nie -',
+                'zablok. lub haslo wygaslo'
+               ) "Zablokowany w bazie Oracle?",
+        e.uzt_f_zablokowany "Zablokowany w EA?" 
+   FROM SYS.dba_users a,
+        eat_uzytkownicy e,
+        eat_firmy f,
+        eat_uprawnienia,
+        eat_funkcje_uzytkowe,
+        eat_aplikacje
+  WHERE e.uzt_nazwa = a.username
+    AND upr_frm_id = frm_id
+    AND upr_uzt_nazwa = e.uzt_nazwa
+    AND upr_fu_id = fu_id
+    AND uzt_f_zablokowany = 'N'
+    AND uzt_f_usuniety = 'N'
+    AND fu_apl_id = apl_id
+    AND fu_nazwa like '%FORMATKA_START%'
+ORDER BY 1, 2, 3
+
+ 
+
+SELECT "Firma", "Aplikacja", count(*) "Ilośc" FROM (
+SELECT  distinct frm_nazwa "Firma", apl_symbol "Aplikacja", a.username "Login"
+   FROM SYS.dba_users a,
+        eat_uzytkownicy e,
+        eat_firmy f,
+        eat_uprawnienia,
+        eat_funkcje_uzytkowe,
+        eat_aplikacje
+  WHERE e.uzt_nazwa = a.username
+    AND upr_frm_id = frm_id
+    AND upr_uzt_nazwa = e.uzt_nazwa
+    AND upr_fu_id = fu_id
+    AND uzt_f_zablokowany = 'N'
+    AND uzt_f_usuniety = 'N'
+    AND fu_apl_id = apl_id
+    AND fu_nazwa like '%FORMATKA_START%'
+)
+GROUP BY "Firma", "Aplikacja"
+ORDER BY 1, 2
