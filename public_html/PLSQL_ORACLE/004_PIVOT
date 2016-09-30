@@ -1,0 +1,56 @@
+-- add k.skowronski 2016-02-01
+
+select * from (
+select substr(knt_pelny_numer,5,4) sk_kod, ks_kwota, knt_nazwa from kgt_ksiegowania, kgt_dokumenty, kg_konta
+where ks_dok_id = dok_id
+and to_char(dok_data_zaksiegowania,'YYYY-MM') = '2015-01'
+and (ks_knt_wn = knt_id or ks_knt_ma = knt_id)
+AND (ks_f_zaksiegowany = 'T' or ks_f_symulacja = 'T')
+--AND ks_rodzaj = 'PK'
+and knt_pelny_numer like '531%' ) A
+PIVOT
+   ( SUM(ks_kwota)
+     FOR sk_kod
+     IN ('C200','C156')
+)
+
+
+dla zwykłego tekstu robimy MAX zamiast SUM
+
+
+
+
+--- inne, dla ROKU
+
+v_okresy varchar2(1000);
+
+
+-- to po rollack;
+v_okresy := '''01-'||:rok||''''
+||','||'''02-'||:rok||''''
+||','||'''03-'||:rok||''''
+||','||'''04-'||:rok||''''
+||','||'''05-'||:rok||''''
+||','||'''06-'||:rok||''''
+||','||'''07-'||:rok||''''
+||','||'''08-'||:rok||''''
+||','||'''09-'||:rok||''''
+||','||'''10-'||:rok||''''
+||','||'''11-'||:rok||''''
+||','||'''12-'||:rok||''''
+;
+
+
+
+open :kursor for
+'select * from (
+select
+  wr_pole_1_t firma
+, wr_pole_2_t okres
+, wr_pole_1_l kwota
+from bctt_wyniki_raportow) A
+PIVOT
+   ( SUM(kwota)
+     FOR okres
+     IN ('||v_okresy||')
+)';

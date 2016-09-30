@@ -1,0 +1,5 @@
+
+select  LISTAGG(sk_kod, ',') WITHIN  GROUP (ORDER BY sk_kod) test from css_stanowiska_kosztow 
+
+
+można jeszcze grupować --OVER (PARTITION BY dum_um_id) 

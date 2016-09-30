@@ -66,3 +66,40 @@ SELECT  distinct frm_nazwa "Firma", apl_symbol "Aplikacja", a.username "Login"
 )
 GROUP BY "Firma", "Aplikacja"
 ORDER BY 1, 2
+
+
+
+-- add 2016-09-29 my new select 
+select "Firma", "Login", "Imie", "Nazwisko"
+, LISTAGG(apka, ',') WITHIN  GROUP (ORDER BY apka) apka
+, "Zablokowany w bazie Oracle?", "Zablokowany w EA?"
+ from 
+ (
+SELECT  distinct frm_nazwa "Firma"
+, apl_symbol Apka
+, a.username "Login", e.uzt_imie "Imie", e.uzt_nazwisko1 "Nazwisko",
+        DECODE (a.account_status,
+                'OPEN', '- nie -',
+                'zablok. lub haslo wygaslo'
+               ) "Zablokowany w bazie Oracle?",
+        e.uzt_f_zablokowany "Zablokowany w EA?" 
+   FROM SYS.dba_users a,
+        eat_uzytkownicy e,
+        eat_firmy f,
+        eat_uprawnienia,
+        eat_funkcje_uzytkowe,
+        eat_aplikacje
+  WHERE e.uzt_nazwa = a.username
+    AND upr_frm_id = frm_id
+    AND upr_uzt_nazwa = e.uzt_nazwa
+    AND upr_fu_id = fu_id
+    AND uzt_f_zablokowany = 'N'
+    AND uzt_f_usuniety = 'N'
+    AND fu_apl_id = apl_id
+    AND fu_nazwa like '%FORMATKA_START%'
+    and a.username not in ('ADMIN','TEST')
+    and frm_nazwa not in ('TEST')
+ORDER BY a.username, frm_nazwa, apl_symbol
+)
+group by "Firma", "Login", "Imie", "Nazwisko", "Zablokowany w bazie Oracle?", "Zablokowany w EA?"
+order by  "Firma", "Login"
