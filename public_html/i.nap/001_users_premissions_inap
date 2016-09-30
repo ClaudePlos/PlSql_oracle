@@ -1,0 +1,23 @@
+-- add k.skowronski 2016-09-30
+
+select  Prc_nazwisko,prc_imie,stn_nazwa,ob_nazwa,ROLA, opis,RODZAJ_DZIALALNOSCI, TYp
+from nap_role_stanowisk, zpt_stanowiska,ek_zatrudnienie,ek_pracownicy,css_obiekty_w_przedsieb,NUPR_OBSZARY_PROCESOW
+where stn_id=rs_stn_id
+and zat_prc_id=prc_id
+and zat_stn_id=stn_id
+and kod=rola
+--AND ZAT_TYP_UMOWY=0
+and stn_id in(44,98,172,37,7,110,10,82,32)
+and zat_ob_id=ob_id
+and (zat_data_do is null or zat_data_do>sysdate)
+GROUP BY Prc_nazwisko,prc_imie,stn_nazwa,ob_nazwa,ROLA, opis,RODZAJ_DZIALALNOSCI, TYp
+
+select Prc_nazwisko,prc_imie,stn_nazwa,ob_nazwa,ROLA, RODZAJ_DZIALALNOSCI, TYp from nap_role_stanowisk, zpt_stanowiska,ek_zatrudnienie,ek_pracownicy,css_obiekty_w_przedsieb
+where stn_id=rs_stn_id
+and zat_prc_id=prc_id
+and zat_stn_id=stn_id
+and stn_id in(44,98,172,37,7)
+and zat_ob_id=ob_id
+and (zat_data_do is null or zat_data_do>sysdate)
+
+
