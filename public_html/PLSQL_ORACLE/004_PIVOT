@@ -1,5 +1,6 @@
 -- add k.skowronski 2016-02-01
 
+-- for a post costs
 select * from (
 select substr(knt_pelny_numer,5,4) sk_kod, ks_kwota, knt_nazwa from kgt_ksiegowania, kgt_dokumenty, kg_konta
 where ks_dok_id = dok_id
@@ -13,6 +14,25 @@ PIVOT
      FOR sk_kod
      IN ('C200','C156')
 )
+
+
+-- for a period -> facility
+select * from (
+select  okres, ob_pelny_kod
+, ( select sk_kod||' '||sk_opis from css_stanowiska_kosztow where sk_kod = st_kosztow) st_kosztow
+, ks_kwota       -- 11     -- 12 
+from napv_ksiegowania_70FRM_DO14 where (konto not like '730%' or konto not like '751%' or konto not like '761%' or konto not like '753%')
+and substr(okres, -4) = '2014'
+and dok_frm_id  not in (300038,300137,300171,300047)
+and ob_pelny_kod is not null
+and st_kosztow not like 'C%'
+)
+PIVOT
+   ( SUM(ks_kwota)
+     FOR okres
+     IN ('01-2014','02-2014','03-2014','04-2014','05-2014','06-2014','07-2014','08-2014','09-2014','10-2014','11-2014','12-2014')
+)
+order by ob_pelny_kod, st_kosztow
 
 
 dla zwykłego tekstu robimy MAX zamiast SUM
