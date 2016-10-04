@@ -1,0 +1,41 @@
+--- add 2016-10-04
+--- salary civil contract 
+
+-- catering
+begin
+eap_globals.USTAW_firme(300038);
+eap_globals.USTAW_konsolidacje('N');
+end;
+
+
+select round(sum(zat_stawka)/count(1),2), count(1) il_pracownikow from ek_pracownicy, ek_zatrudnienie 
+where zat_prc_id=prc_id
+and ek_zatrudnienie.zat_data_zmiany = (
+	 select max(zat_data_zmiany) from ek_zatrudnienie 
+	 where zat_prc_id = prc_id
+	 and zat_typ_umowy = 0 
+	 and zat_data_zmiany <= last_day(to_date(:data_do,'MM-YYYY') ))
+	 --
+	 and (ek_zatrudnienie.zat_data_do >= to_date(:data_do,'MM-YYYY')
+	 or ek_zatrudnienie.zat_data_do is null)
+	 and zat_typ_umowy = 0
+
+
+--facility 
+begin
+eap_globals.USTAW_konsolidacje('T');
+end;
+
+
+select round(sum(zat_stawka)/count(1),2), count(1) il_pracownikow from ek_pracownicy, ek_zatrudnienie 
+where zat_prc_id=prc_id
+and ek_zatrudnienie.zat_data_zmiany = (
+	 select max(zat_data_zmiany) from ek_zatrudnienie 
+	 where zat_prc_id = prc_id
+	 and zat_typ_umowy = 0 
+	 and zat_data_zmiany <= last_day(to_date(:data_do,'MM-YYYY') ))
+	 --
+	 and (ek_zatrudnienie.zat_data_do >= to_date(:data_do,'MM-YYYY')
+	 or ek_zatrudnienie.zat_data_do is null)
+	 and zat_typ_umowy = 0
+	 and zat_frm_id not in (300038,300171)
