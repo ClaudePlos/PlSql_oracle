@@ -1,0 +1,12 @@
+-- add k.skowronski 2016-10-05
+
+-- connect facility with client
+select sk_kod, sk_opis, kl_kod, kl_skrot
+from css_stanowiska_kosztow, ckk_umowy, css_wartosci_pol, ckk_klienci
+where wap_dep_id = 100024
+and um_id = to_number(wap_Wartosc)
+and sk_wap_id = wap_id  
+and um_kl_kod = kl_kod
+and kl_kod not in (1,5700)
+order by sk_kod
+
