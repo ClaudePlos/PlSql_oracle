@@ -32,3 +32,15 @@ and eu_miesiac = '2014-03-01'
 and zat_prc_id = prc_id;
 
 
+
+-- without stage agreement
+
+	 SELECT prc_numer,  prc_nazwisko,  prc_imie, sk_kod , sk_opis, zat_stawka, zat_data_przyj, zat_data_zmiany, zat_data_do, zat_temat
+	 , (select frm_nazwa from eat_firmy where frm_id = zat_frm_id) frm
+	 FROM EK_PRACOWNICY, ek_zatrudnienie, css_Stanowiska_kosztow 
+	 WHERE zat_prc_id = prc_id
+	 and sk_id = zat_sk_id
+	 AND ( (zat_typ_umowy in (1,2,3,10))) AND zat_data_zmiany <= :ddo AND NVL(zat_data_do, '2099-01-01') >= :dod
+	 order by sk_kod, prc_nazwisko, zat_data_zmiany
+
+
