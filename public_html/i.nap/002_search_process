@@ -1,0 +1,26 @@
+-- add ks 2016-06-11
+-- ********************************************************************
+-- search to who went the task  START
+-- 01. process
+
+select * from  nzad_instancje_procesow where kod_typu = 'MKT_PROCES_FAKTUROWANIA_SK' -- start procesu, id to proces_id
+order by uruchomiono desc
+
+select * from  nzad_instancje_procesow where id = 4823845
+
+--02. klucze (keys) 122506
+
+select * from w5_klucze where proces_id = 4887968
+
+select * from w5_klucze where zad_id = 4825280
+
+--02.  zadania (task)
+
+select * from nzad_zadania where proces_id = 4823845-- proces id
+
+-- 03. przypisania (assignment)  
+
+select * from NZAD_PRZYPISANIA where zad_id = 4898698
+
+-- END 
+-- ********************************************************************

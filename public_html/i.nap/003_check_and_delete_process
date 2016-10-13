@@ -1,0 +1,45 @@
+-- add ks 2016-06-11
+
+-- ********************************************************************
+--- delete procesu  
+-- START
+
+-- 01. proces usuwamy na koncu, trzba usunąć klucze zadań, zadania, klucze procesów i proces i etykiety kluczy i przypisania 
+select * from  nzad_instancje_procesow where id = 4892706
+
+--02.  zadania
+
+select * from nzad_zadania where proces_id = 4892758-- proces id
+
+--02. klucze
+
+select * from w5_klucze where proces_id = 4892709
+
+select * from w5_klucze where zad_id = 4892661
+
+
+
+-- zadanie 
+
+delete from nzad_przypisania where zad_id = 4892759
+
+delete from w5_etykiety where klucz_id in (select id from w5_klucze where zad_id = 4892759)
+
+delete from w5_klucze where zad_id = 4892759
+
+delete from nzad_zadania where id = 4892759
+
+commit
+
+-- proces
+
+delete from w5_etykiety where klucz_id in (select id from w5_klucze where proces_id = 4892758)
+
+delete from w5_klucze where proces_id = 4892758
+
+delete from  nzad_instancje_procesow where id = 4892758
+
+commit
+
+-- END
+-- ********************************************************************
