@@ -1,0 +1,22 @@
+README
+
+OKNA I KOMUNIKACJA:
+Okna mamy osadzone, więc jak klikamy przycisk Zarejestruj na przykładzie zgłoszenia IT, to funkcja wykonująca jest w innym oknie.
+Wywołuje ona we flexie w5wykonajAkcje w pliku ListaZadanProxy (INapApiLib pl.inap.zadania.business) 
+
+flex
+OknoRealizacjiZadan14.mxml -> onClickAkcja -> wywolajAkcje (button to zadania:NapButAkcja id="butAkcja")
+ZadaniaMenager5.as -> wywolajAkcje
+ListaZadanProxy.as -> w5wykonajAkcje
+java
+W5ClientBean.java -> wykonajAkcej - i tu jest tworzony proces a przysłany jest tylko W5WykonanieAkcjiDTO
+
+Dane z okna:
+Dane dodatkowe dla procesu są trzymane w kluczach w tabeli w5_klucze. (np. wniosek urlopowy)
+Ale mamy też dane w tabelach, np. proces fakturowania i wtedy robi to przycisk zapisz 
+
+****
+KLUCZE -> opisane w tabeli W5_def_kluczy system klucza nie może być inny niż w w5_def_systemy (now EGERIA, W5)
+dzięki temu w EgeriaISystemApiBean.java są funksje jak: przeliczGrupeEtykiet które przeliczają dane dla kluczy
+
+
