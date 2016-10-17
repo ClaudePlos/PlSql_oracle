@@ -5,6 +5,7 @@ Okna mamy osadzone, więc jak klikamy przycisk Zarejestruj na przykładzie zgło
 Wywołuje ona we flexie w5wykonajAkcje w pliku ListaZadanProxy (INapApiLib pl.inap.zadania.business) 
 
 flex
+OknoRZWewnetrzne 
 OknoRealizacjiZadan14.mxml -> onClickAkcja -> wywolajAkcje (button to zadania:NapButAkcja id="butAkcja")
 ZadaniaMenager5.as -> wywolajAkcje
 ListaZadanProxy.as -> w5wykonajAkcje
