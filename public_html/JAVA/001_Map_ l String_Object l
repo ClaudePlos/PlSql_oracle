@@ -1,0 +1,21 @@
+-- add k.skowronski 2016-09-22 
+
+-- 01
+Binding bind = new Binding();
+bind.setProperty("zapotrzebowanie",zapotrzbowanie); --> zapotrzebowanie jakaś lista
+
+..TODO -- something else must be to do Map<String,Object>
+
+
+-- 02
+String zapotrzebowanie   = "zapotrzebowanie" ;
+Map<String,Object> bindingSkryptu = wa.getParametryWywolania();
+         
+          if ( bindingSkryptu != null ){
+          for( String key :   bindingSkryptu.keySet() ){
+              logger.trace("kopiujeZmienna: " + key);
+               bind.setVariable(key,bindingSkryptu.get(key));
+          }
+        }
+
+ZapotrzebowanieVO zap = (ZapotrzebowanieVO) bind.getProperty((String) zapotrzebowanie);

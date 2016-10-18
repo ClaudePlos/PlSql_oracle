@@ -7,6 +7,7 @@ Wywołuje ona we flexie w5wykonajAkcje w pliku ListaZadanProxy (INapApiLib pl.in
 flex
 OknoRZWewnetrzne 
 OknoRealizacjiZadan14.mxml -> onClickAkcja -> wywolajAkcje (button to zadania:NapButAkcja id="butAkcja")
+and oknoWewnetrzne.przedWywolaniemAkcji15 dobrze mieć dopisane do okna wewnętrznego
 ZadaniaMenager5.as -> wywolajAkcje
 ListaZadanProxy.as -> w5wykonajAkcje
 java
