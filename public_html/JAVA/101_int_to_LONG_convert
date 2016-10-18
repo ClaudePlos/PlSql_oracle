@@ -1,0 +1,3 @@
+
+ int myInt=4;
+ Long myLong= new Long(myInt);

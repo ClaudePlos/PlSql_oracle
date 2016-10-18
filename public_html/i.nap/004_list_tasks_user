@@ -1,0 +1,12 @@
+SELECT kod_typu, COUNT(1), MIN(z.data_deadline), zp.skrot 
+            FROM nzad_zadania z, nzad_przypisania p, nap_uzytkownik u , nupr_zadania_procesow zp 
+            WHERE z.id = p.zad_id
+             and zp.kod = z.kod_typu              
+            AND p.status != 'ZREALIZOWANE' 
+            AND p.status != 'ANULOWANE'
+            AND z.status != 'ZREALIZOWANE'
+            AND z.status != 'ANULOWANE'
+            AND p.uzytkownik = u.uz_nazwa
+            AND u.uz_id =  277358 -- uzId
+             and nvl(z.w5_ver ,0)>= 500 
+            GROUP BY kod_typu , zp.skrot 

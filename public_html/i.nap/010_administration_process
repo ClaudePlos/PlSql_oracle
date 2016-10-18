@@ -1,0 +1,10 @@
+
+
+
+
+administracja: 
+
+Tabele:
+
+
+NDEF_AKCJE_PRCESOW ->  określasz czy to ma iść przez EJB  (najbardziej popularne) czy może przez skrypt w Grovvy

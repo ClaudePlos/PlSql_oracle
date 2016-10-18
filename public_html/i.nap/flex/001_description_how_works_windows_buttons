@@ -12,6 +12,7 @@ ZadaniaMenager5.as -> wywolajAkcje
 ListaZadanProxy.as -> w5wykonajAkcje
 java
 W5ClientBean.java -> wykonajAkcej - i tu jest tworzony proces a przysłany jest tylko W5WykonanieAkcjiDTO
+for example: ProcesITBean.java -> wykonajAkcjeProcesu
 
 Dane z okna:
 Dane dodatkowe dla procesu są trzymane w kluczach w tabeli w5_klucze. (np. wniosek urlopowy)
@@ -20,5 +21,7 @@ Ale mamy też dane w tabelach, np. proces fakturowania i wtedy robi to przycisk 
 ****
 KLUCZE -> opisane w tabeli W5_def_kluczy system klucza nie może być inny niż w w5_def_systemy (now EGERIA, W5)
 dzięki temu w EgeriaISystemApiBean.java są funksje jak: przeliczGrupeEtykiet które przeliczają dane dla kluczy
+
+
 
 
