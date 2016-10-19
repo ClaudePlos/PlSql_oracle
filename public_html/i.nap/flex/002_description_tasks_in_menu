@@ -1,4 +1,8 @@
 
 nupr_zadania_procesow -> skrót to jest to co wyświeltla się w głównym menu w liście zadań. nazwy zadań do wykonania 
 
+do wyświetlania szczeg. w menu chyba potrzebne są klucze na procesie i okerślenie etykiet.
+
+Table: w5_etykiety 
+
 ;$ET:SK
