@@ -3,6 +3,9 @@ nupr_zadania_procesow -> skrót to jest to co wyświeltla się w głównym menu 
 
 do wyświetlania szczeg. w menu chyba potrzebne są klucze na procesie i okerślenie etykiet.
 
-Table: w5_etykiety 
+Table: w5_etykiety
+
+Configuration:
+ Table W5_DEF_ETYKIET connect witch KLUCZE
 
 ;$ET:SK

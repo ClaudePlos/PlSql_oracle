@@ -22,6 +22,14 @@ Ale mamy też dane w tabelach, np. proces fakturowania i wtedy robi to przycisk 
 KLUCZE -> opisane w tabeli W5_def_kluczy system klucza nie może być inny niż w w5_def_systemy (now EGERIA, W5)
 dzięki temu w EgeriaISystemApiBean.java są funksje jak: przeliczGrupeEtykiet które przeliczają dane dla kluczy
 
+****
+ETYKIETY -> klucze maja etykiety, to te informacje jakie pokazują się w szczegółach zadan 
+opis w pliu 002_descriptions_tasks_in_menu
+Jakie chcesz etykiety, określasz po przez dodanie kluczy, bo to one maja określone jak są przypisane etykiety do nich i tak np:
+zad02.getKlucze().add( new W5KluczVO("EGERIA_SK", zgl.getSk().getSkId() ));  wstawi etykietę kodu i opisu dla SK
 
 
-
+****
+BUTTON NA DOLE (Przekaż do realizacji, Zakońćz itd)
+Table: NDEF_AKCEJ_PROCESOW -> jak ustawimy EJB to będzie szukać wykonajAkcjeProcesu w Bean
+NDEF_PRZYPISANIA_AKCJI -> tutaj jakoś się ustawia co mam się wyświetlać, np id,*,*,id_akcji,id_procesu da nam Zaakceptuj wykonnie 
