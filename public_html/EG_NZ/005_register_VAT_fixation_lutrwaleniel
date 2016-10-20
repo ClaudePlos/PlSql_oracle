@@ -1,0 +1,8 @@
+-- add ks. 2016-10-20
+
+
+-- 01. konsolidation and you must find register id
+select * from NZT_REJESTRY_VAT where rv_rok = 2016 and rv_miesiac = 7
+
+-- 02 and change rgrv_f_zatwierdzony = 'N'
+select * from NZT_RV_WGRV where rgrv_rv_id in (6066357,6066355)
