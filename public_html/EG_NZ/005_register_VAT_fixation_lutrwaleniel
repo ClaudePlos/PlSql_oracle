@@ -4,5 +4,12 @@
 -- 01. konsolidation and you must find register id
 select * from NZT_REJESTRY_VAT where rv_rok = 2016 and rv_miesiac = 7
 
--- 02 and change rgrv_f_zatwierdzony = 'N'
+-- 02 and change rgrv_f_zatwierdzony = 'N' -- cofnięcie utrwalenia 
 select * from NZT_RV_WGRV where rgrv_rv_id in (6066357,6066355)
+
+-- 03 utrwalenie change rgrv_f_zatwierdzony = 'T' in NZT_RV_WGRV (bez klikania na button, bo doda pozycje jeszcze raz)
+
+other option:
+begin
+nzp_obj_rgrv.p_wycofaj_zatwierdzenie (121);
+end;

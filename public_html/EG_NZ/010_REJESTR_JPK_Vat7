@@ -1,0 +1,10 @@
+-- Drukuje się teraz z NZ > Dokumenty > Deklaracje
+i aby dane były ok to rejestry muszą być utrwalone. Wysłanie JPK praktycznie zamyka poprawianie rejestrów ale:
+
+01. Jak chcesz wycofać utrwalenie to czytaj 005_register_VAT....
+lub można z pakietów 
+begin
+nzp_obj_rgrv.p_wycofaj_zatwierdzenie (121);
+end;
+
+a potem utrwal buttonem na formatce 
