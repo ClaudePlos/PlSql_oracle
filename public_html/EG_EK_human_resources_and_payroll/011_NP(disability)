@@ -1,0 +1,21 @@
+add to select like table:
+
+(select np_prc_id 
+ , (select wsl_alias from css_wartosci_slownikow where wsl_sl_nazwa ='EK_ORGAN_WYDAJACY' and wsl_wartosc = np_organ_wydajacy) organ_wydajacy
+ , np_numer_up
+ , np_data_od
+ , np_data_do
+ , np_kod_niepelnosprawnosci
+ , np_uwagi
+ , (select wsl_alias from css_wartosci_slownikow where wsl_sl_nazwa ='EK_NIEPEL_DOD' and wsl_wartosc = np_kod_dod) uwagi2
+from ek_niepelnosprawnosci, ek_pracownicy
+where np_data_wplywu = (
+select max(np_data_wplywu) from ek_niepelnosprawnosci 
+where np_prc_id=prc_id
+and np_kod_niepelnosprawnosci is not null 
+and np_data_od <= last_day(to_date(:data_do,'MM-YYYY'))
+and (np_data_do >= to_date(:data_do,'MM-YYYY') or np_data_do is null)
+)
+and np_kod_niepelnosprawnosci is not null
+and prc_id=np_prc_id) ORZECZENIA
+where PRACOWNICY.prc_id = ORZECZENIA.np_prc_id
