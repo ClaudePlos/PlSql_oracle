@@ -12,5 +12,5 @@ KLCZE  ws1.wsl_wartosc=zat_wymiar
 
 
 select zat_prc_id, zat_id, wsl_wartosc_max, wsl_alias from ek_zatrudnienie,
-(select wsl_wartosc, wsl_wartosc_max, wsl_opis from css_wartosci_slownikow where wsl_sl_nazwa like 'TYP_ETATU') etat
+(select wsl_wartosc, wsl_wartosc_max, wsl_alia4 from css_wartosci_slownikow where wsl_sl_nazwa like 'TYP_ETATU') etat
 where zat_wymiar=wsl_wartosc
