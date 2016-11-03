@@ -1,1 +1,16 @@
--- ad ks 2016-09-27
+-- add ks 2016-09-27
+
+
+ job position (ETAT) 
+`````
+
+SUBSTR(wsl_alias,1,3)/SUBSTR(wsl_alias,4,6) 
+
+TABELA css_wartosci_slownikow ws1
+OBIEKT ws1.wsl_sl_nazwa='TYP_ETATU'
+KLCZE  ws1.wsl_wartosc=zat_wymiar
+
+
+select zat_prc_id, zat_id, wsl_wartosc_max, wsl_alias from ek_zatrudnienie,
+(select wsl_wartosc, wsl_wartosc_max, wsl_opis from css_wartosci_slownikow where wsl_sl_nazwa like 'TYP_ETATU') etat
+where zat_wymiar=wsl_wartosc
