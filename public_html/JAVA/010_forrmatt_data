@@ -1,6 +1,0 @@
-
-String date_s = " 2011-01-18 00:00:00.0"; 
-SimpleDateFormat dt = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss"); 
-Date date = dt.parse(date_s); 
-SimpleDateFormat dt1 = new SimpleDateFormat("yyyy-mm-dd");
-System.out.println(dt1.format(date));
