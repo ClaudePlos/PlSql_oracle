@@ -8,3 +8,12 @@ nzp_obj_rgrv.p_wycofaj_zatwierdzenie (121);
 end;
 
 a potem utrwal buttonem na formatce 
+
+!!!!. Dla Naprzod jest kwartalne rozliczanie. I Ola po konsultacjach z Comarch odkryła, ze jest tam przycisk,
+ aby drukować bez potrzeby z utrwalania.
+
+Instukcja Generacji:
+1. wszystko rób z pulpitu 192.168.0.6
+2. NZ > Inne > Wersje rejestrow (utrwal i przejdź do generacji)
+3. 1 formatka -> Generuj JPK. Po wygenerowaniu zaznacz i zatwierdź.
+4. Już z MP-> Zaznaczyć jako Wysyłka do Azure i clikc on "Twórz/wyślij plik"
