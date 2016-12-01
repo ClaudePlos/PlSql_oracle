@@ -1,0 +1,21 @@
+
+The syntax for creating a foreign key in an ALTER TABLE statement is:
+
+ALTER TABLE table_name
+ADD CONSTRAINT constraint_name
+   FOREIGN KEY (column1, column2, ... column_n)
+   REFERENCES parent_table (column1, column2, ... column_n);
+
+
+Example:
+
+ALTER TABLE products
+ADD CONSTRAINT fk_supplier
+  FOREIGN KEY (supplier_id)
+  REFERENCES supplier(supplier_id);
+
+My:
+ALTER TABLE ngr_zmiany_przerwy
+ADD CONSTRAINT ngr_zmiany_id
+  FOREIGN KEY (zmiana_id)
+  REFERENCES ngr_zmiany(id);
