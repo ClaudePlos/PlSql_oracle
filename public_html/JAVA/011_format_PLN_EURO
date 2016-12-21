@@ -1,0 +1,5 @@
+
+
+Locale.setDefault( new Locale("pl","PL") ); // doda zł ale nie dodan formatu 0.00 zł tylko 0 zł 
+
+DecimalFormat df = new DecimalFormat("#,##0.00"); // lepsze, ewentualnie na końcu dodać zł jak potrzebne 
