@@ -1,0 +1,5 @@
+
+function -> INapApiLib > pl.inap.zadania.business.ListaZadanProxy.as (w5pobierzZadanieDoRealizacji -> pobiera)
+
+|-INapApiLib > pl.zadania.OknoRealizacjiZadan14.mxml --> w5ZadaniDoRealizacji przesyła jak mają wyglądać buttony 
+|--INapApiLib > pl.zadania.NapButAkcja.mxml --> tutaj obsługa co ma wyświetlać button
