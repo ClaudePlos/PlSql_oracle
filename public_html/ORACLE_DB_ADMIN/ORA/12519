@@ -1,0 +1,5 @@
+1. Ten błąd zaczyna być przesyłany przez oralce na maila w momencie, gdy Ola uruchamia program do tworzenia PKów.
+
+na pewno nie parallel_max_server (odpowiada on za obsługę zrownoleglonych zapytań - opcja dostępna tylko w Enterprise Edition), bardziej bym przypuszczał, że doszedłeś do limitu procesów...
+select * from v$resource_limit where resource_name = 'processes';
+jak doszedłeś do maxa to zwiesz parametr processes i restart bazy
