@@ -1,0 +1,23 @@
+example CONTINUE a loop from an exception: 
+
+DECLARE
+   v_attr char(88);
+CURSOR  SELECT_USERS IS
+SELECT id FROM USER_TABLE
+WHERE USERTYPE = 'X';
+BEGIN
+    FOR user_rec IN SELECT_USERS LOOP    
+        BEGIN
+            SELECT attr INTO v_attr 
+            FROM ATTRIBUTE_TABLE
+            WHERE user_id = user_rec.id;            
+         EXCEPTION
+            WHEN NO_DATA_FOUND THEN
+               -- user does not have attribute, continue loop to next record.
+               goto end_loop;
+         END;
+
+        <<end_loop>>
+        null;         
+    END LOOP;
+END;
