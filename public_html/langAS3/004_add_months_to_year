@@ -1,0 +1,6 @@
+
+var data : String = "";				
+if ( mc <= 9 ) 
+  data = "0";
+data += mc.toString();
+data += "-2014";

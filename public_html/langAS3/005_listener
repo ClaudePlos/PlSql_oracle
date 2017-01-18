@@ -1,0 +1,93 @@
+
+A. 
+
+W oknieWeryfikacije w onCC dodaję 
+
+this.addEventListener("OKNO_WERYFIKACJI_ZAMKNIJ", onZamknijOkno);
+
+to jest nasłuch 
+
+W oknieKorekt dodaję 
+
+oknoWeryfikacji.dispatchEvent( new Event ("OKNO_WERYFIKACJI_ZAMKNIJ"));
+
+i to zamyka okno.
+
+Trzbea jeszcze tylko w oknieWeryfikacji przy otwieraniu oknaKorekty przekazać ID okna weryfikacji
+Czyli w oknieWeryfikacji tam gdzie otwiera się oknoKorekty:
+
+var okno : OknoTworzKorekte = new OknoTworzKorekte();
+okno.init(grafik);
+okno.oknoWeryfikacji = this; // to jest ważna lina !!!
+NapWindowsManager.showPopupWindow( okno ); 
+
+No i jako public w oknieKorety trzeba dodać na początku deklarację okna weryfikacji:
+
+public var oknoWeryfikacji : OknoWeryfikacjiGrafiku;
+
+no i jak wywolamy w oknieKorekty np za pomoca buttona funkcję z linią:
+
+oknoWeryfikacji.dispatchEvent( new Event ("OKNO_WERYFIKACJI_ZAMKNIJ"));
+
+to zamknie okno weryfikacji
+
+tak samo można z jakimć modelem zrobić 
+
+B.
+
+W projekcie Nap Kontrahenci > Kontakty zrobiłem też fajenie. 
+Listner pomiędzy ElKontakty.mxml a ElKontaktyEdytuj.mxml.
+
+1. Jak ElKontakty.mxml otwiera popup ElKontaktyEdytuj.mxml to dodaje nasłuch:
+
+private function onClickEdytuj( rodzKontaktu : String, numer : String, wlascicel : String, komentarz : String, id : Number ) : Function
+		{
+			return function(e:MouseEvent):void {
+				//trace("Received " + numer);
+				var elEdytuj : ElKontaktyEdytuj  = new ElKontaktyEdytuj;
+				elEdytuj.rodzajKontaktu 	= rodzKontaktu;
+				elEdytuj.numer 				= numer;
+				elEdytuj.wlascicel 			= wlascicel;
+				elEdytuj.komentarz 			= komentarz;
+				elEdytuj.kontaktId			= id;
+				elEdytuj.addEventListener("OKNO_ZMIENIONO_KONTAKTY", myEvent );  //!!! Nasluch
+				NapWindowsManager.showPopupWindow( elEdytuj, null,true );
+			};
+			
+		}
+
+		private function myEvent(event:DynamicEvent):void
+		{			
+			pobierzKontaktTel();
+		}
+
+
+2. A w pliku ElKontaktyEdytuj.mxml po wykonaniu zapisu wysyła komunikat
+
+private function onZapisanoKontakt( result : ResultEvent, token : Object ) : void
+			{
+				var tel : TelefonVO = result.result as TelefonVO;
+				
+				var evt:DynamicEvent = new DynamicEvent('OKNO_ZMIENIONO_KONTAKTY');
+				dispatchEvent(evt); // zwraca wykonanie to nasłuchu
+			}
+
+3.
+-- tyle się mecze a tu prosze: (ale aby dobrze funkcjonowało trzeba się namęczyć.)
+
+dispatchEvent(new Event("DispatcherClassEvent", true));
+
+addEventListener("DispatcherClassEvent", doThisFunction);
+
+function doThisFunction(evt:Event):void {
+     trace("Woo Hoo");
+}
+
+
+4. Zakłądanie własnego eventu.
+Szybko jak to napisać znajdziesz w projekcie Androida PZ
+
+
+
+
+
