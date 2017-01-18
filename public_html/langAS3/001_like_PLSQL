@@ -1,0 +1,11 @@
+
+var rodzaj : String = "ANEKS123"
+
+if (rodzaj.toUpperCase().search("ANEKS") == -1)
+{
+ nie ma
+}
+else
+{
+jest
+}

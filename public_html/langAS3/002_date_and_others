@@ -1,0 +1,42 @@
+
+//data godzina
+var d:Date = new Date()
+trace(d) //zwraca wartosc
+var dzien:Number = d.getDay() //dzien tygodnia 0-6
+var dat:Number = d.getDate() // dzien miesiaca 1-31
+var rok:Number = d.getFullYear() // zwraca rok
+var sek:Number = d.getSeconds() // skundy
+var mili:Number = d.getMillisecond() // milisekundy
+var mies:Number = d.getMonth() // zwraca miesiac 0-11
+var min:Number = d.getMinutes() // zwraca minuty 0-59
+
+//IF
+
+if (warunek) {akcja1} 
+else {akcja2}
+
+if (warunek) {akcja1} 
+else if (warunek2) {akcja2}
+/////
+
+= przypisanie
+== prownanie
+!= negacja
+&& and i
+|| or lub
+pole.text = "napis"
+
+
+-- pobranie indexu w arrayu
+
+	for each ( var wp : WpisGrafikaVO in wiersz.wpisy)
+	{
+	 var i : int = wiersz.wpisy.getItemIndex( wp );
+		for each ( var abs : AbsencjaVO in wiersz.absencje)
+		{
+		if ( wp.data >= abs.ab_data_od && wp.data <= abs.ab_data_do && abs.rda_kod == 'UW' && wp.data <= ostatniDzienMC )
+		{
+		ilosc = ilosc + wp.iloscGodzinMin;
+		}
+		}
+		}	
