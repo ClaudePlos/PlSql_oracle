@@ -1,0 +1,81 @@
+// 001. good example from garfiki: 
+
+private var _lataOtwarteOkresy	: ArrayCollection = new ArrayCollection;
+
+private function rodzielLataOtwarteOkresy():void
+		{
+			_lataOtwarteOkresy.removeAll();
+
+			for each (var o:OkresVO in _okresy)
+			{
+				var spr : Boolean = findObjectByAttribute(_lataOtwarteOkresy, "rok", o.data_do.fullYear.toString() );
+				
+				if ( spr == false )
+				{
+					var rok : Object = new Object();
+					rok.rok = o.data_do.fullYear;
+					_lataOtwarteOkresy.addItem( rok );
+				}
+							
+			}
+		}
+		
+private function findObjectByAttribute(arrayCollection:ArrayCollection, attributeName:String, value:String):Boolean
+{
+        for each (var object:Object in arrayCollection) {
+                if(object[attributeName]==value){
+                        return true;
+                }
+        }
+        return false;
+}
+
+
+
+
+*********************************************************************************************************************
+// 002. example from net 
+
+Use a method like this which will return the first object which matches the conditions:
+ 
+private function findObjectByAttribute(arrayCollection:ArrayCollection,
+                                                      attributeName:String, value:String):Object{
+  for each (var object:Object in arrayCollection) {
+                      if(object[attributeName]==value){
+                            return object;
+                      }
+                }
+  return null;
+}
+ 
+To find the object with id=2, you would call the above method like this:
+ 
+var object:Object = findObjectByAttribute(collection, "id", "2");
+
+
+
+
+*********************************************************************************************************************
+// 003. example from net refresh :)
+var collection:ArrayCollection = new ArrayCollection([  
+          {id:"1", stuff:"whatever1"},  
+          {id:"2", stuff:"whatever2"},  
+          {id:"3", stuff:"whatever3"},  
+          {id:"4", stuff:"whatever4"},  
+          {id:"5", stuff:"whatever5"},  
+          {id:"6", stuff:"whatever6"}  
+]);  
+var findByIdFilter:Function = function(item:Object):Boolean  
+{  
+          if(item.id == 2) return true;  
+          return false;  
+};  
+collection.filterFunction = findByIdFilter;  
+collection.refresh();  
+trace(collection);  
+
+trace:
+(Array)#0  
+  [0] (Object)#1  
+    id = "2"  
+    stuff = "whatever2" 

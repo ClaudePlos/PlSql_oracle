@@ -1,0 +1,4 @@
+
+
+if (myArray.indexOf(item) != -1) trace("item exists");
+else trace("nope! can't find it")
