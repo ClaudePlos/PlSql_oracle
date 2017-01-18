@@ -1,0 +1,9 @@
+Poniższy przykład ilustruje zwrot za pomocą metody toFixed(3) ciągu liczb, który jest zaokrąglany do trzech miejsc po przecinku.
+
+var num:Number = 7.31343;
+trace(num.toFixed(3)); // 7.313
+
+Poniższy przykład ilustruje zwrot za pomocą metody toFixed(2) ciągu liczb z dodanymi kończącymi zerami.
+
+var num:Number = 4;
+trace(num.toFixed(2)); // 4.00

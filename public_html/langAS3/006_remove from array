@@ -1,0 +1,9 @@
+
+ ac.addItem("foo1");
+ ac.addItem("foo2");
+ ac.addItem("foo3");
+
+ for each (var foo:String in ac) {
+     if (foo.charAt(0)=="f")
+         ac.removeItemAt(ac.getItemIndex(foo));
+ }
