@@ -1,0 +1,51 @@
+
+
+
+var i:int; 
+for (i = 0; i < 5; i++) 
+{ 
+    trace(i); 
+}
+
+
+
+var myObj:Object = {x:20, y:30}; 
+for (var i:String in myObj) 
+{ 
+    trace(i + ": " + myObj[i]); 
+} 
+// output: 
+// x: 20 
+// y: 30
+
+
+var myArray:Array = ["one", "two", "three"]; 
+for (var i:String in myArray) 
+{ 
+    trace(myArray[i]); 
+} 
+// output: 
+// one 
+// two 
+// three
+
+
+var myObj:Object = {x:20, y:30}; 
+for each (var num in myObj) 
+{ 
+    trace(num); 
+} 
+// output: 
+// 20 
+// 30
+
+
+var myArray:Array = ["one", "two", "three"]; 
+for each (var item in myArray) 
+{ 
+    trace(item); 
+} 
+// output: 
+// one 
+// two 
+// three
