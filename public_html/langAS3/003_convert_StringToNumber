@@ -1,2 +1,4 @@
 
 Number(weightvar.text);
+
+trace(Number("1")/Number("2")); 
