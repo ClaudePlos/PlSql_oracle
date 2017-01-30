@@ -1,1 +1,9 @@
-TODO
+
+
+i może być 1 i np. 11
+
+var rok : String = okr.symbol.substr(3,4);
+var mc : String = okr.symbol.substr(0,2);
+var dd : String = "0"+i;
+
+txt.id = rok + "-" + mc + "-" + dd.substr( dd.length-2, 2);
