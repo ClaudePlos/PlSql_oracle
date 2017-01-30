@@ -1,0 +1,12 @@
+import com.adobe.serialization.json.JSON;
+
+-- odszukać taki pakiet i wrzucić do projektu
+
+
+var jsonString = '{"response":[{"id":' + object["id"] + ',"ileOsob":' + object["ileOsob"] + '}]}'; // tu normalnie String z JSONem
+var myobj:Object = JSON.decode(jsonString);
+
+
+txt.id =  myobj.response[0].id;
+txt.text = myobj.response[0].ileOsob;
+

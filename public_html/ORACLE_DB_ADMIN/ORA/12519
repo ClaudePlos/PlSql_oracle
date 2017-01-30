@@ -3,3 +3,13 @@
 na pewno nie parallel_max_server (odpowiada on za obsługę zrownoleglonych zapytań - opcja dostępna tylko w Enterprise Edition), bardziej bym przypuszczał, że doszedłeś do limitu procesów...
 select * from v$resource_limit where resource_name = 'processes';
 jak doszedłeś do maxa to zwiesz parametr processes i restart bazy
+
+
+
+Tak zrobiłem: 
+http://stepintooracledba.blogspot.com/2013/01/ora-02095-specified-initialization.html
+
+
+SQL>alter system set processes=300 scope=spfile;
+
+System altered.

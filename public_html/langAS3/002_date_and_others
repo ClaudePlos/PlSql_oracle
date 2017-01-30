@@ -10,6 +10,20 @@ var mili:Number = d.getMillisecond() // milisekundy
 var mies:Number = d.getMonth() // zwraca miesiac 0-11
 var min:Number = d.getMinutes() // zwraca minuty 0-59
 
+// Date to String
+public static function DataYYYYMMDD(p_data:Date):String{
+        var dateFormatter:DateFormatter = new DateFormatter();
+        dateFormatter.formatString = 'YYYY-MM-DD';	   		
+        return  dateFormatter.format(p_data);
+}
+
+//String to Date 
+public static function DataYYYYMMDD_SD(p_data:String):Date{
+			var sDate:Date=DateField.stringToDate(p_data,"YYYY-MM-DD");		
+			return sDate;
+		}
+
+
 //IF
 
 if (warunek) {akcja1} 
