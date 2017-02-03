@@ -1,6 +1,6 @@
 
 List<String> strings = Arrays.asList("abc", "", "bc", "efg", "abcd","", "jkl");
-List<String> filtered = strings.stream().filter(string -> !string.isEmpty()).collect(Collectors.toList());
+List<String> filtered = strings.stream()string -> !string.isEmpty()).collect(Collectors.toList());
 
 
 --my
@@ -10,3 +10,40 @@ if( spr == false )
 {
  ....
 }
+
+
+-- 01
+Predicate<StanZywDzienPosilekKkDTO> p1 = e -> e.getDieta().equals( d.getDietaNazwa() ) && e.getGz().equals(gz.getGzNazwa()); 
+boolean b1 = stanyKK.stream().anyMatch(p1);  //true or false 
+
+
+--- 0001
+List<Person> persons = Arrays.asList(new Person("mkyong"),
+		new Person("michael"), new Person("lawrence"));
+
+Person result = persons.stream()				   // Convert to steam
+	.filter(x -> "michael".equals(x.getName()))	// we want "michael" only
+	.findAny()									// If 'findAny' then return found
+	.orElse(null);								// If not found, return null
+
+
+
+
+-- 0002
+List<Person> persons = Arrays.asList(new Person("mkyong", 20),
+	new Person("michael", 21), new Person("lawrence", 23));
+
+Person result = persons.stream()
+	.filter((x) -> "michael".equals(x.getName()) && 21==x.getAge())
+	.findAny()
+	.orElse(null);
+
+//or like this
+Person result = persons.stream()
+	.filter(x -> {
+		if("michael".equals(x.getName()) && 21==x.getAge()){
+			return true;
+		}
+		return false;
+	}).findAny()
+	.orElse(null);

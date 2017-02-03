@@ -1,4 +1,4 @@
--- add k.skowronski 2016-09-22 
+-- add k.skowronski 2016-09-22  https://www.mkyong.com/java8/java-8-streams-filter-examples/
 
 -- 01
 Binding bind = new Binding();
