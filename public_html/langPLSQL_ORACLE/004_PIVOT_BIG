@@ -1,0 +1,129 @@
+CREATE OR REPLACE VIEW SZPV_GRAFIKI
+("Pracownik", STANOWISKO, "Jednostka", "Plan", OKRES, 
+ GRUPA, LP, "Typ", "01", "02", 
+ "03", "04", "05", "06", "07", 
+ "08", "09", "10", "11", "12", 
+ "13", "14", "15", "16", "17", 
+ "18", "19", "20", "21", "22", 
+ "23", "24", "25", "26", "27", 
+ "28", "29", "30", "31", "typ01", 
+ "typ02", "typ03", "typ04", "typ05", "typ06", 
+ "typ07", "typ08", "typ09", "typ10", "typ11", 
+ "typ12", "typ13", "typ14", "typ15", "typ16", 
+ "typ17", "typ18", "typ19", "typ20", "typ21", 
+ "typ22", "typ23", "typ24", "typ25", "typ26", 
+ "typ27", "typ28", "typ29", "typ30", "typ31", 
+ WYMIAR, URLOP, CHOROBA, SUMA)
+AS 
+SELECT prc_nazwisko||' '||prc_imie||' '||prc_numer "Pracownik"
+, case when  stn_nazwa in ('PIELĘGNIARKA', 'PIELĘGNIARKA ODDZIAŁOWA', 'Z-CA PIELĘGNIARKI ODDZIAŁOWEJ', 'Z-ca PIEL.ODDZIAŁOWEJ', 'ST.PIELĘGNIARKA', 'St. pielęgniarz', 'St. Położna', 'ST.POŁOŻNA', 'Pielęgniarz', 'Położna', 'RATOWNIK MEDYCZNY', 'St. pielęgniarz') then 'PIEL'||' '||jednostka  
+       when  stn_nazwa in ('starszy statystyk medyczny', 'Statystyk Medyczny', 'SEKRETARKA MEDYCZNA', 'REJESTRATORKA MEDYCZNA') then 'MED'||' '||jednostka       
+       else stn_nazwa||' '||jednostka end stanowisko,
+   jednostka "Jednostka",       
+       pp_nazwa "Plan",
+       okres,
+       grupa,
+       lp,
+       '2 Od' "Typ",
+       d01_zm "01",     
+       d02_zm "02",
+       d03_zm "03",
+       d04_zm "04",
+       d05_zm "05",
+       d06_zm "06",
+       d07_zm "07",
+       d08_zm "08",
+       d09_zm "09",
+       d10_zm "10",
+       d11_zm "11",     
+       d12_zm "12",
+       d13_zm "13",
+       d14_zm "14",
+       d15_zm "15",
+       d16_zm "16",
+       d17_zm "17",
+       d18_zm "18",
+       d19_zm "19",
+       d20_zm "20",
+       d21_zm "21",     
+       d22_zm "22",
+       d23_zm "23",
+       d24_zm "24",
+       d25_zm "25",
+       d26_zm "26",
+       d27_zm "27",
+       d28_zm "28",
+       d29_zm "29",
+       d30_zm "30",       
+       d31_zm "31",
+       d01_sw "typ01",     
+       d02_sw "typ02",
+       d03_sw "typ03",
+       d04_sw "typ04",
+       d05_sw "typ05",
+       d06_sw "typ06",
+       d07_sw "typ07",
+       d08_sw "typ08",
+       d09_sw "typ09",
+       d10_sw "typ10",
+       d11_sw "typ11",     
+       d12_sw "typ12",
+       d13_sw "typ13",
+       d14_sw "typ14",
+       d15_sw "typ15",
+       d16_sw "typ16",
+       d17_sw "typ17",
+       d18_sw "typ18",
+       d19_sw "typ19",
+       d20_sw "typ20",
+       d21_sw "typ21",     
+       d22_sw "typ22",
+       d23_sw "typ23",
+       d24_sw "typ24",
+       d25_sw "typ25",
+       d26_sw "typ26",
+       d27_sw "typ27",
+       d28_sw "typ28",
+       d29_sw "typ29",
+       d30_sw "typ30",       
+       d31_sw "typ31",
+       szp_ocean_funkcje.szp_gr_wymiar_prac_w_mc( prc_id,okres) wymiar,
+       szp_ocean_funkcje.szp_gr_urlop_prac_w_mc( prc_id,okres) urlop,
+       szp_ocean_funkcje.szp_gr_chor_prac_w_mc( prc_id,okres) choroba,
+       szp_ocean_funkcje.szp_gr_suma_prac_w_mc( prc_id,okres) suma
+--selec
+--select *        
+  FROM   (        SELECT prc_id, 
+                  (select pp_nazwa from ek_plany_pracy, ek_Zatrudnienie where zat_pp_id = pp_id and zat_id = pi_zat_id ) pp_nazwa,
+                  prc_numer, 
+                  prc_nazwisko,
+                  prc_imie,
+                  (select max(stn_nazwa) from zpt_stanowiska where stn_id = zat_stn_id) stn_nazwa,
+                  case when pi_zmiana like 'x' then 
+                  ltrim(to_char((select min(gwd_od) from ek_godziny_w_dniu where gwd_pi_id=pi_id),'HH24:MI'),'0')||chr(10)||ltrim(to_char((select max(gwd_do) from ek_godziny_w_dniu where gwd_pi_id=pi_id),'HH24:MI'),'0')
+                  else pi_zmiana end pi_zmiana,
+                  (select gprc_dg_kod from EK_GRUPY_PRACOWNIKOW, EK_DEF_GRUP where  gprc_dg_kod = dg_kod and gprc_prc_id = prc_id and dg_dk_kod  = 'GRAFIKI') grupa,
+                  (select gprc_numer from EK_GRUPY_PRACOWNIKOW, EK_DEF_GRUP where  gprc_dg_kod = dg_kod and gprc_prc_id = prc_id and dg_dk_kod  = 'GRAFIKI') lp,
+                  to_char(pi_dzien,'DD') dzien,
+                  to_char(pi_dzien,'YYYY-MM') okres,
+                 (select ob_nazwa from css_obiekty_w_przedsieb where zat_ob_id = ob_id) jednostka,
+                 pi_rd_kod 
+              from ek_pracownicy, ek_plany_indywidualne, ek_zatrudnienie
+             where pi_prc_id = prc_id
+               and zat_id=pi_zat_id
+             --  and pi_dzien BETWEEN  trunc(:p_dzien,'MM') AND LAST_DAY(:p_dzien)
+               and zat_typ_umowy=0
+               and zat_prc_id in (select gprc_prc_id from EK_GRUPY_PRACOWNIKOW, EK_DEF_GRUP where gprc_dg_kod = dg_kod and dg_dk_kod  = 'GRAFIKI')
+               and zat_pp_id in (select pp_id from ek_plany_pracy --where pp_nazwa like '%pusty%'
+               )
+                 )
+    PIVOT (
+               MAX(pi_zmiana) zm ,max(pi_Rd_kod) sw       --<-- pivot_clause
+           FOR dzien --IN ('01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31')
+           IN ('01' AS D01,'02' AS D02,'03' AS D03,'04' AS D04,'05' AS D05,'06' AS D06,'07' AS D07,'08' AS D08,'09' AS D09,'10' AS D10,
+                         '11' AS D11,'12' AS D12,'13' AS D13,'14' AS D14,'15' AS D15,'16' AS D16,'17' AS D17,'18' AS D18,'19' AS D19,'20' AS D20,
+                         '21' AS D21,'22' AS D22,'23' AS D23,'24' AS D24,'25' AS D25,'26' AS D26,'27' AS D27,'28' AS D28,'29' AS D29,'30' AS D30,'31' AS D31)
+         )
+/
+
+

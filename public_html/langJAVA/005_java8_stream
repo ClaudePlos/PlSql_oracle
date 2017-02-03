@@ -1,0 +1,12 @@
+
+List<String> strings = Arrays.asList("abc", "", "bc", "efg", "abcd","", "jkl");
+List<String> filtered = strings.stream().filter(string -> !string.isEmpty()).collect(Collectors.toList());
+
+
+--my
+
+boolean spr = listRoadDistance.stream().anyMatch( rd -> rd.getCompanyId().equals( c.getId() ));
+if( spr == false )
+{
+ ....
+}
