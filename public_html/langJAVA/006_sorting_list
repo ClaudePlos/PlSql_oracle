@@ -1,0 +1,18 @@
+
+public class GzDTO {   
+    private String gzNazwa;
+}
+
+List<GzDTO> gzList = new ArrayList<GzDTO>();
+
+Collections.sort(gzList,  Collections.reverseOrder() ); //proste sortowanie ale nie działa
+
+// może dla samego stringa działa ??
+List<String> yourList = new ArrayList<String>();
+Collections.sort(yourList, Collections.reverseOrder());
+
+// JAva8 -- nie testowałem 
+gzList = gzList.stream().sorted(Collections.reverseOrder()).collect(Collectors.toList());
+
+//Java8 -- działa WooHoo
+Collections.sort(gzList, (o1, o2) -> o1.getGzNazwa().compareTo(o2.getGzNazwa()));
