@@ -1,0 +1,15 @@
+
+
+
+int ileWierszy = stany.size();
+        int i = 1;
+        
+        EntityTransaction tx = em.getTransaction();
+        
+        for(StanZywionychNaDzienDTO s : stany )
+        {
+            
+            
+             try {
+                 
+                System.out.print("Zapisuje dane, wgrałem już " + i * 100 / ileWierszy); 
