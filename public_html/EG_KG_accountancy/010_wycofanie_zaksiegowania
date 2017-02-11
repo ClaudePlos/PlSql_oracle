@@ -1,0 +1,8 @@
+
+
+1. Na tabeli kgt_dokumenty
+Flagi dok_f_zaksiegowany na 'N' a dok_f_tymczasowy na 'T'
+i wyłącz trikery z końcówka ...DOWOD I ...ZAKSIEGOWANY
+
+2. NA TABELI KGT_KSIEGOWANIA wtłącz trigery z kończówką ...ZAKSIEGOWANY
+ i zmień flagę f_zaksiegowany na 'N' i można cofnąć weryfikację dokumenty :)
