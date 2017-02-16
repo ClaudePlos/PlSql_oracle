@@ -1,0 +1,31 @@
+
+
+
+select sum(DP_NZ)  g3
+, sum(DP_NU)  g2
+, sum(DP_NL)  g1
+, sum(DP_NSZ) g3_spec
+, sum(DP_NSU) g2_spec
+, sum(DP_NSL) g3_spec
+, sum(DP_CZ)  g3_ZPCH
+, sum(DP_CU)  g2_ZPCH
+, sum(DP_CL)  g1_ZPCH
+, sum(DP_CSZ) g3_zpch_spec
+, sum(DP_CSU) g2_zpch_spec
+, sum(DP_CSL) g3_zpch_spec
+from ( 
+select case when DP_NZ != 0 then DP_43_WYPLATA else 0 end DP_NZ
+, case when DP_NU != 0 then DP_43_WYPLATA else 0 end DP_NU
+, case when DP_NL != 0 then DP_43_WYPLATA else 0 end DP_NL
+, case when DP_CZ != 0 then DP_43_WYPLATA else 0 end DP_CZ
+, case when DP_CU != 0 then DP_43_WYPLATA else 0 end DP_CU
+, case when DP_CL != 0 then DP_43_WYPLATA else 0 end DP_CL
+, case when DP_NSL != 0 then DP_43_WYPLATA else 0 end DP_NSL
+, case when DP_NSZ != 0 then DP_43_WYPLATA else 0 end DP_NSZ
+, case when DP_NSU != 0 then DP_43_WYPLATA else 0 end DP_NSU
+, case when DP_CSZ != 0 then DP_43_WYPLATA else 0 end DP_CSZ
+, case when DP_CSU != 0 then DP_43_WYPLATA else 0 end DP_CSU
+, case when DP_CSL != 0 then DP_43_WYPLATA else 0 end DP_CSL
+, DP_43_WYPLATA 
+from nap_sod_infdp where substr(dp_okres,-4) = '2016' 
+)

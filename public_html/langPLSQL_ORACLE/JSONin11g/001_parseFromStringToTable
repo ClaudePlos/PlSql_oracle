@@ -1,0 +1,34 @@
+
+--- 01
+select regexp_replace(regexp_substr('[{"id": "1", "contactBy":"Rajesh Kumar"},{"id": "2","contactBy": "Emmanuel Test"}]',
+                                    '"contactBy":\s*("(\w| )*")', 1, level),
+                     '"contactBy":\s*"((\w| )*)"', '\1', 1, 1) contact
+from dual
+connect by regexp_substr('[{"id": "1","contactBy":"Rajesh Kumar"},{"id": "2","contactBy": "Emmanuel Test"}]', '"contactBy":\s*("(\w| )*")', 1, level) is not null
+;
+
+
+
+--- 02
+select listagg(contact, ', ') within group (order by lev)
+from
+(
+  select regexp_replace(regexp_substr('[{"id": "1", "contactBy":"Rajesh Kumar"},{"id": "2","contactBy": "Emmanuel Test+-"}]',
+                                      '"contactBy":\s*(".*?")', 1, level),
+                       '"contactBy":\s*"(.*?)"', '\1', 1, 1) contact, level lev
+  from dual
+  connect by regexp_substr('[{"id": "1","contactBy":"Rajesh Kumar"},{"id": "2","contactBy": "Emmanuel Test+-"}]', '"contactBy":\s*(".*?")', 1, level) is not null
+)
+;
+
+-- 03 my
+
+select regexp_replace(regexp_substr('[{"okres": "01_2016", "kwota":"100_22"},{"okres": "02_2016","kwota": "200_10"}]'
+,'"kwota":\s*("(\w| )*")', 1, level)
+,'"kwota":\s*"((\w| )*)"', '\1', 1, 1) kwota
+, regexp_replace(regexp_substr('[{"okres": "01_2016", "kwota":"100_22"},{"okres": "02_2016","kwota": "200_10"}]'
+,'"okres":\s*("(\w| )*")', 1, level)
+,'"okres":\s*"((\w| )*)"', '\1', 1, 1) okres
+from dual
+connect by regexp_substr('[{"okres": "01_2016", "kwota":"100_22"},{"okres": "02_2016","kwota": "200"}]', '"kwota":\s*("(\w| )*")', 1, level) is not null
+;

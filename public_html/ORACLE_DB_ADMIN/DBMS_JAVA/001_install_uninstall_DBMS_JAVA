@@ -1,0 +1,26 @@
+
+Recently, the developer met the following error message while trying to create a java object using SQL Developer:
+ORA-29538: Java not installed
+
+Well, first let’s check if the JVM components is really not installed in Oracle – verify installed components:
+
+1 in TOAD check
+select comp_name, version, status from dba_registry;
+
+
+to be double sure, we run another query which should return no rows:
+
+2 in TOAD chcek
+select distinct owner,name from dba_source where lower(NAME)='dbms_java';
+
+3 Use sqlplus go to $ORACLE_HOME...... and @nitjvm.sql
+So, to install the JVM you should run (sys as sysdba) initjvm.sql located in $ORACLE_HOME\javavm\install:
+5 min install 
+
+Now, check if JVM was installed successfully:
+
+4
+select comp_name, version, status from dba_registry;
+
+
+The problem solved 
