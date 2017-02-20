@@ -1,0 +1,26 @@
+// 2017-02-20 dodaję PKi zamknięcia roku z kont 860 tak aby nie pokazywały się w raportach zarządczych 
+
+begin
+eap_globals.USTAW_konsolidacje('T');
+end;
+
+
+select dok_numer_wlasny from nap_pk_wyksiegowania_zam_roku, kgt_dokumenty 
+where id = dok_id
+
+commit
+
+insert into nap_pk_wyksiegowania_zam_roku
+select dok_id, 'ZAMKNIECIE ROKU 2015' from (
+select distinct dok_id, dok_opis, dok_frm_id from kgt_dokumenty, kgt_ksiegowania, kg_konta
+where ks_dok_id = dok_id
+and KS_KNT_WN = knt_id
+and dok_rdok_kod = 'PK'
+and knt_pelny_numer = '860'
+and dok_frm_id in (
+select frm_id from eat_firmy where frm_kl_id in (
+select ck_kl_kod from CKK_CECHY_KLIENTOW where ck_ce_id = 100603)
+)
+and dok_frm_id not in (300037)
+and to_char(dok_data_zaksiegowania,'YYYY') = '2015'
+)
