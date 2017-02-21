@@ -23,6 +23,21 @@ from
 
 -- 03 my
 
+-- the best :)
+select regexp_replace(regexp_substr('[{"date": "01-2016", "val":"100.22"},{"date": "02-2016","val": "200.10"},{"date": "03-2016","val": "200.15"}]'
+,'"val":\s*("(\w|[..])*")', 1, level)
+,'"val":\s*"((\w|[..])*)"', '\1', 1, 1) val
+, regexp_replace(regexp_substr('[{"date": "01-2016", "val":"100.22"},{"date": "02-2016","val": "200.10"},{"date": "03-2016","val": "200.15"}]'
+,'"date":\s*("(\w|[-])*")', 1, level)
+,'"date":\s*"((\w|[-])*)"', '\1', 1, 1) date_period
+from dual
+connect by regexp_substr('[{"date": "01-2016", "val":"100.22"},{"date": "02-2016","val": "200.10"},{"date": "03-2016","val": "200.15"}]', '"val":\s*("(\w|[..])*")', 1, level) is not null
+;
+
+
+
+
+
 select regexp_replace(regexp_substr('[{"okres": "01_2016", "kwota":"100_22"},{"okres": "02_2016","kwota": "200_10"}]'
 ,'"kwota":\s*("(\w| )*")', 1, level)
 ,'"kwota":\s*"((\w| )*)"', '\1', 1, 1) kwota
@@ -32,3 +47,10 @@ select regexp_replace(regexp_substr('[{"okres": "01_2016", "kwota":"100_22"},{"o
 from dual
 connect by regexp_substr('[{"okres": "01_2016", "kwota":"100_22"},{"okres": "02_2016","kwota": "200"}]', '"kwota":\s*("(\w| )*")', 1, level) is not null
 ;
+
+SELECT REGEXP_REPLACE(
+         '[{"date": "01_2016", "val":"100_22"},{"date": "02_2016","val": "200.10"}]',
+         '"val":"(\d+)_(\d+)"',
+         '"val":"\1.\2"'
+       )
+FROM   DUAL;
