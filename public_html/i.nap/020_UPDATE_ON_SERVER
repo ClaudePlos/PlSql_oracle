@@ -1,0 +1,10 @@
+A. JAVA NORMALNIE commit i update na serwrze produkcyjnym.
+
+B. Flex: 
+1. przed wysłaniem na serwer produkcyjny  - zmienieasz w propertis projektu Nap do nap.swf
+
+-services  F:\srcj5\INaprzod5\N5-INaprzod4-web\web\WEB-INF\flex\services-config.xml
+
+zmień na:
+
+-services  F:\srcj5\INaprzod5\N5-INaprzod4-web\web\WEB-INF\flex\services-config-inap.xml

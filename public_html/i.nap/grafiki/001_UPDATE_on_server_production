@@ -1,0 +1,17 @@
+// add 2017-02-21
+
+1. Flex nGrafikiMod2 > src>default package>NapWfGR 
+url -> zmieniamy tak aby pobierał z tabeli. Wtedy grafiki będą laczyć się produkcyjnie. 
+
+2. Grafiki są podlinkowane w na i.naprzod w projekcie GrafikiINAP (projekt z mavenem).
+Znajdują się w /home/szeryf/srcgraf12/nGrafiki12 i TAM MUSIMY WRZUCIC NASZ SRC PROJEKU
+Można go pobrać z 0.16(komp chrusta) bo tam przesyłam wszystko jako kopie z f:\srcfnap4\Grafiki\nGrafiki12
+Zrób backup i wkopiuj 
+
+
+
+3. Flex kompilujemy nie projekt nGrafikiApp12 tylko nGrafikiMod2, który ma podlinkowane nGrafikiApp12.
+Z kompilacji otrzymujemy plik: NapWfGr 
+Robimy backup i wklejamy na i.naprzod do glassfisha do projektów
+
+Jeszcze w netbeans clean and  build na GrafikiINap mavenowe i run
