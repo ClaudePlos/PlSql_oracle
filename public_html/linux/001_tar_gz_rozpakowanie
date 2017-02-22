@@ -1,0 +1,7 @@
+
+
+-- normalnie 
+tar zxvf czw_ora.tar.gz
+
+-- do innego katalogu
+tar -xf archive.tar -C /target/directory
