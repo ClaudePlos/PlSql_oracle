@@ -19,3 +19,9 @@ ALTER TABLE ngr_zmiany_przerwy
 ADD CONSTRAINT ngr_zmiany_id
   FOREIGN KEY (zmiana_id)
   REFERENCES ngr_zmiany(id);
+
+//Grafiki
+ALTER TABLE ngr_plany_stanowiskowe_wpisy
+ADD CONSTRAINT ngr_wiersz_planu_id
+  FOREIGN KEY (wiersz_planu_id)
+  REFERENCES ngr_wiersze_planow(id);
