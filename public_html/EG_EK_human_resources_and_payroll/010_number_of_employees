@@ -1,5 +1,9 @@
 -- add k.skowronski 2005
 
+-- 0 UP
+-- 1 Dzielo
+-- 2 Zlecenie 
+
 ----- 1. 
 ----- number of employees (contract)
 select count(*) from ek_pracownicy, ek_zatrudnienie 
