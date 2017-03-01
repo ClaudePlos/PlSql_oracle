@@ -1,0 +1,19 @@
+
+declare 
+v_wartosc number;
+v_mm varchar2(2);
+begin
+FOR rek IN 1..12
+LOOP
+v_mm := substr('0'||rek,-2);
+select sum(1) into v_wartosc 
+from (
+SELECT prc_id, count(1)
+	 FROM EK_PRACOWNICY, ek_zatrudnienie, css_Stanowiska_kosztow 
+	 WHERE zat_prc_id = prc_id
+	 and sk_id = zat_sk_id
+	 AND ( (zat_typ_umowy in (2))) AND zat_data_zmiany <= last_day(to_date(:rok||'-'||v_mm,'YYYY-MM')) AND NVL(zat_data_do, '2099-01-01') >= to_date(:rok||'-'||v_mm,'YYYY-MM')
+group by prc_id having  count(1) > 1);
+dbms_output.put_line (to_char(last_day(to_date(:rok||'-'||v_mm,'YYYY-MM')),'YYYY-MM-DD')||';'||v_wartosc);
+END LOOP;
+end;

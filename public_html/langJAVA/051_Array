@@ -1,0 +1,20 @@
+int[] myIntArray = new int[3];
+int[] myIntArray = {1,2,3};
+int[] myIntArray = new int[]{1,2,3};
+
+
+String[] myStringArray = new String[3];
+String[] myStringArray = {"a","b","c"};
+String[] myStringArray = new String[]{"a","b","c"};
+
+
+
+List<String> listOfString = new ArrayList<String>();
+listOfString.add("foo");
+listOfString.add("bar");
+String value = listOfString.get(0);
+assertEquals( value, "foo" );
+
+
+
+
