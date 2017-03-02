@@ -75,3 +75,55 @@ and zat_prc_id = prc_id;
 	 order by sk_kod, prc_nazwisko, zat_data_zmiany
 
 
+
+--- wyliczanie etatów rocznie - GOOD
+declare 
+v_mm varchar2(2);
+v_txt varchar2(4000);
+begin
+--
+for r1 in
+(
+	select ob_pelny_kod from css_obiekty_w_przedsieb
+	where ob_stan_definicji = 'Z'
+	and (ob_pelny_kod like '00-%' or ob_pelny_kod = '00')
+	order by ob_pelny_kod
+)
+LOOP --start1
+v_txt := r1.ob_pelny_kod||';';
+----
+FOR r2 IN 1..12
+LOOP --start2
+v_mm := substr('0'||r2,-2);
+--
+for rek in (
+select ob_pelny_kod, sum(SUBSTR(wsl_alias,1,3)/SUBSTR(wsl_alias,4,6)) etat 
+from ek_pracownicy, ek_zatrudnienie, css_Stanowiska_kosztow, css_obiekty_w_przedsieb, css_stanowiska_obiekty, eat_firmy,
+(select wsl_wartosc, wsl_wartosc_max, wsl_alias from css_wartosci_slownikow where wsl_sl_nazwa like 'TYP_ETATU') etat
+where zat_prc_id=prc_id
+and zat_sk_id = sk_id
+and zat_frm_id = frm_id
+and so_sk_id = sk_id
+and so_ob_id = ob_id
+and zat_wymiar=wsl_wartosc
+and ek_zatrudnienie.zat_data_zmiany = (
+	 select max(zat_data_zmiany) from ek_zatrudnienie 
+	 where zat_prc_id = prc_id
+	 and zat_typ_umowy = 0 
+	 and zat_data_zmiany <= last_day(to_date(:rok||'-'||v_mm,'YYYY-MM'))) -- ewent. do
+	 --
+	 and (ek_zatrudnienie.zat_data_do >= to_date(:rok||'-'||v_mm,'YYYY-MM') -- ewent. od
+	 or ek_zatrudnienie.zat_data_do is null)
+	 and zat_typ_umowy = 0
+	 and ob_pelny_kod = r1.ob_pelny_kod
+group by ob_pelny_kod
+)
+loop
+v_txt := v_txt||rek.etat||';';
+end loop; 
+END LOOP;--end2;
+--
+ dbms_output.put_line (v_txt);
+--
+END LOOP; --end1
+end;
