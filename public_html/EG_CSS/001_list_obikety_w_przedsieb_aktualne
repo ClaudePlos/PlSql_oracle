@@ -1,0 +1,6 @@
+
+
+select * from css_obiekty_w_przedsieb
+where ob_stan_definicji = 'Z'
+and (ob_pelny_kod like '00-%' or ob_pelny_kod = '00')
+order by ob_pelny_kod
