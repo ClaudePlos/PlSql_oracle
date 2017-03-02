@@ -1,0 +1,5 @@
+
+
+
+-- jeśli źle dodałem mogę datafile usuną tak:
+ALTER TABLESPACE USERS DROP DATAFILE '/u01/app/szeryf/product/11.2.0/dbhome_1/dbs/users02.dbf';

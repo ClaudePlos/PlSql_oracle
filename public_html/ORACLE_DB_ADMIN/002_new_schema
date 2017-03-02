@@ -1,0 +1,8 @@
+
+create user jadlospis4 identified by q
+
+GRANT CONNECT TO jadlospis4;
+
+grant create table to jadlospis4;
+
+in toad you can copy privilage rols from another user 

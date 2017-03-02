@@ -1,0 +1,63 @@
+ALTER TABLESPACE temp SHRINK TEMPFILE '/u01/app/oracle/oradata/DB11G/temp01.dbf' KEEP 30M;
+
+albo 
+
+create tablespace temp2 tempfile '+DATA' size 100M autoextend on 10M .....
+alter database default tablespace temp2;
+jak zakończą się wszystkie transkacje z temp to
+drop tablespace temp;
+Alter tablespace temp2 rename to temp ;
+
+
+
+
+rozrosła mi się przestrzeń undotbs01.dbf czy tą przestrzeń też mogę wyczyścić w taki sposób?  
+(10:04:16) Oskar Graliński Kalisz OCP: nie
+(10:04:18) Oskar Graliński Kalisz OCP: :)
+(10:05:40) Oskar Graliński Kalisz OCP: najlepiej ten drugi sposób w przypadku undo 
+SQL> create undo tablespace UNDOTBS2 datafile '<complete file path>' size <smaller size>;
+SQL> alter system set UNDO_TABLESPACE=UNDOTBS2;
+SQL> drop tablespace UNDOTBS1 including contents and datafiles;
+(10:05:59) Oskar Graliński Kalisz OCP: oczywiscie przed dropem musisz zaczekac az skoncza sie wszyskie aktywne transakcje
+10:07:44) Oskar Graliński Kalisz OCP: dla przestrzeni tabel typu temp i undo najelpiej ustawiac maksymalny rozmiar... tak aby snie nie rozszerzyla za mocno.. bo kiedys zabraknie miejsca na dysku i dopiero bedzie kupa....
+lepiej niech wywali sie durne polecenie niz cała baza ;)
+
+
+
+-- ten właśnie drugi sposób
+-- 1. zakłądam nową przestrzeń temp
+
+CREATE TEMPORARY TABLESPACE temp2
+TEMPFILE '/db_oracle/db1/temp2_01.dbf' SIZE 5M REUSE
+AUTOEXTEND ON NEXT 1M MAXSIZE unlimited
+EXTENT MANAGEMENT LOCAL UNIFORM SIZE 1M;
+
+
+-- 2. zmieniam ustawienia systemnu na nową przestrzeń
+
+ALTER DATABASE DEFAULT TEMPORARY TABLESPACE temp2;
+
+
+-- 3. wywalam starą. Najlepiej zrobić to jak są all wylogowani 
+
+DROP TABLESPACE temp INCLUDING CONTENTS AND DATAFILES;
+
+
+-- 4. zakładam nową temp
+
+CREATE TEMPORARY TABLESPACE temp
+TEMPFILE '/db_oracle/db1/temp01.dbf' SIZE 256M REUSE
+AUTOEXTEND ON NEXT 128M MAXSIZE unlimited
+EXTENT MANAGEMENT LOCAL UNIFORM SIZE 1M;
+
+
+-- 5. przestawiam na nową 
+
+ALTER DATABASE DEFAULT TEMPORARY TABLESPACE temp;
+
+
+-- 6. i kasuję tą tymczasową 
+
+DROP TABLESPACE temp2 INCLUDING CONTENTS AND DATAFILES;
+
+commit
