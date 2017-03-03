@@ -29,3 +29,12 @@ select case when DP_NZ != 0 then DP_43_WYPLATA else 0 end DP_NZ
 , DP_43_WYPLATA 
 from nap_sod_infdp where substr(dp_okres,-4) = '2016' 
 )
+
+
+
+--nap_sod_infdp_napservice
+--nap_sod_infdp_napspzoo
+--nap_sod_infdp_medassist
+--nap_sod_infdp_izan
+--nap_sod_infdp_hospital
+--nap_sod_infdp_vendi
