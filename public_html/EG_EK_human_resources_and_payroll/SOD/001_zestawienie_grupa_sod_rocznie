@@ -31,6 +31,8 @@ from nap_sod_infdp where substr(dp_okres,-4) = '2016'
 )
 
 
+napv_prc_zat_np_okres_2 --view
+
 
 --nap_sod_infdp_napservice
 --nap_sod_infdp_napspzoo
