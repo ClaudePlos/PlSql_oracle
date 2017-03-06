@@ -1,0 +1,30 @@
+
+Technologia Restowa. Ta sama aplikacja ale łączy się na dwi bazy.
+Dostawca i odbiorca.
+u1.Odbiorca - Oracle/MAPI0714/zamowienia <- schemat
+u2.Dostawca MySql
+
+u1. jdbc/oracle-zamowienia -> db: mapi0714 / zamowienia na laptopie ustawione -> na admina
+u2. <jta-data-source>vorders</jta-data-source> -> db:vorders  -> na 0.15 -> na megafruit
+ z githaba zaciąga się vorders a powinno być oracle_local, vendiRealm !!!
+dlatego jak zmienisz to testowo nie działa i.naprzod, bo przejmuje vordes
+
+  
+Update production version:
+
+u2.1 start glassfisg (w glassfish/bin): ./asadmin start-domain
+u2.2 jak aktualizujesz to pobierz z svn na komp stacjonarny KS 0.15 i tam w netbensie zrób war
+
+
+Działanie strony: 
+u1 loguje się i składa nowe ZWK, 
+ - Dodaje pozycje i zapisuje. 
+ - Zmienia akcję na zatwierdzoen.
+ - Przekazuje do realizacji 
+ - Przeglądam powiązane ZWD i klikam na nie 
+ - Akcja na ZWD - > wyślij do dostawcy (Generuje Edifact). Po poprawnym wysłaniu powinien pojawic się numer dostawcy
+
+u2 loguje się i przegląda ZWD
+ - widzi ZWD ze statusem otrzymane przez dostawcę 
+ - może potwierdzic ilości lub zrobić zamieniki i przesłać ponownie do akceptacji 
+ - i tu TODO. Zrobić update po stronie u1 
