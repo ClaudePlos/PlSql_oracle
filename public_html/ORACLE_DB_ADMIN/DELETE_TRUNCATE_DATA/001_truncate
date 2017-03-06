@@ -1,0 +1,17 @@
+
+W poniższym przykładzie instrukcji TRUNCATE użyto do usunięcia wszystkich danych z tabeli:
+SQL> truncate table pracownicy
+Domyślnie podczas usuwania danych z tabeli zwalniana jest cała przestrzeń z wyjątkiem ilości określonej
+za pomocą parametru MINEXTENTS. Jeżeli nie chcesz, aby instrukcja TRUNCATE zwolniła aktualnie zajęte
+rozszerzenia, możesz użyć klauzuli REUSE STORAGE:
+
+
+DROP STORAGE
+zwalnia wszystkie przydzielone tabeli extenty powyŜej wartości
+MINEXTENTS. Przy tym kasowany jest znacznik wysokiej wody
+i ustawiany na pierwszy blok tabeli; jest to klauzula domyślna
+
+REUSE STORAGE
+usuwa dane, natomiast przestrzeń zarezerwowana dla tej tabeli
+pozostaje, równieŜ znacznik wysokiej wody nie zmienia swojego
+połoŜenia.
