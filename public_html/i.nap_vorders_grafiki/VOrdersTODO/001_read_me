@@ -27,4 +27,13 @@ u1 loguje się i składa nowe ZWK,
 u2 loguje się i przegląda ZWD
  - widzi ZWD ze statusem otrzymane przez dostawcę 
  - może potwierdzic ilości lub zrobić zamieniki i przesłać ponownie do akceptacji 
- - i tu TODO. Zrobić update po stronie u1 
+ - i tu ****TODO!!!***. Zrobić update po stronie u1 
+
+
+Tabele i modele:
+ - Document - vo_documents (nagłówki dokumentów)
+ - DocumentItem - vo_document_items (pozycje dokumentów)
+
+ - UnitsProductsSuppliers - vo_units_products_suppliers  - tabela CENNIKI tylko o u1 Odbiorcy.Spis dostawców i produktów 
+ - UnitsProducts - vo_units_products - tabela cenniki tylko u dostawców
+
