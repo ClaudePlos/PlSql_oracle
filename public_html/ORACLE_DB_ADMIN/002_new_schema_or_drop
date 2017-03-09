@@ -6,3 +6,8 @@ GRANT CONNECT TO jadlospis4;
 grant create table to jadlospis4;
 
 in toad you can copy privilage rols from another user 
+
+
+
+*********************
+DROP USER smithj CASCADE;
