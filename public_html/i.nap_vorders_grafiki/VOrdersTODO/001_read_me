@@ -26,8 +26,19 @@ u1 loguje się i składa nowe ZWK,
 
 u2 loguje się i przegląda ZWD
  - widzi ZWD ze statusem otrzymane przez dostawcę 
- - może potwierdzic ilości lub zrobić zamieniki i przesłać ponownie do akceptacji 
+ - może potwierdzic ilości lub zrobić zamieniki i przesłać z zamiennikami 
  - i tu ****TODO!!!***. Zrobić update po stronie u1 
+
+u1
+ - przyjmuje jako ORDRSP
+ - WAZNE! jak testujesz EdifactOrdrspImport i jak zwróci błąd, to później debug jeszcze raz, bo inaczej cały czas zgłasza że nie widzi EJB
+ - TODO -> w IncomingParser linia 201   prod = productsApi.getByCmpIndex(buyerProductId, this.doc.getSupplier().getId()); -> doc is null !!!
+
+
+nasłuch: 
+https://i2.naprzod.pl/VOrders/resources/vorders
+
+
 
 
 Tabele i modele:
