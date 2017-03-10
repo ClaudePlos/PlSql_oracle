@@ -35,8 +35,13 @@ u1
  - TODO -> w IncomingParser linia 201   prod = productsApi.getByCmpIndex(buyerProductId, this.doc.getSupplier().getId()); -> doc is null !!!
 
 
-nasłuch: 
-https://i2.naprzod.pl/VOrders/resources/vorders
+nasłuch: wpisuje sie po stronie dostawcy
+https://i2.naprzod.pl/VOrders/resources/vorders -- produkcyjnie
+http://192.168.0.208:40884/VOrders/resources/vorders -- na mój laptop
+
+nasłuch: wpisuje się po stronie zamawiającego(odbiorcy):
+Megafruit: http://zamowienia.vendiservis.pl:8080/VOrders/resources/vorders - produkcynie 
+Megafruit: http://192.168.0.15:8080/VOrders/resources/vorders - testowo
 
 
 
