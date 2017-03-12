@@ -53,3 +53,32 @@ Tabele i modele:
  - UnitsProductsSuppliers - vo_units_products_suppliers  - tabela CENNIKI tylko o u1 Odbiorcy.Spis dostawców i produktów 
  - UnitsProducts - vo_units_products - tabela cenniki tylko u dostawców
 
+
+
+POSTMAN
+- na moim laptopie: http://localhost:40884/VOrders/resources/vorders
+- Headers dodaj: voToken : hasloVendiDlaMegafruit
+- Body oznacz RAW i wklej:
+UNA:+.? 
+UNB+UNOC:3+5222899038:14+9512362076:14+20170312:1340+1489322439350++VENDI_APP_ORDERS+1+1+AGGRID+0
+UNH+1+ORDRSP:D:96A:UN:EAN008
+BGM+220+ZWD/16/12/0001
+DTM+137:20161230:102
+NAD+BY+5222899038++Vendi Servis Sp. z o.o.
+NAD+DP+C206++Kuchnia Wyszków
+NAD+SU+9512362076++Mega Fruit Karol Trzewik
+LIN+1.0++WAR000004:EN
+PIA+5+WAR000004:BP
+IMD+A++:::CEBULA
+QTY+21:10.0:kg
+QTY+113:0.0:kg
+PRI+NTP:1.38
+LIN+2.0++WAR000161:EN
+PIA+5+WAR000161:BP
+IMD+A++:::BAKŁAŻAN
+QTY+21:5.0:kg
+QTY+113:5.0:kg
+PRI+NTP:6.5
+UNS+S
+UNT+1+1489322439350
+UNZ+1+1489322439350
