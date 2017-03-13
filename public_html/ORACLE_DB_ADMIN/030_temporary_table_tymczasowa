@@ -1,0 +1,12 @@
+W Oracle możemy stworzyć tabelę tymczasową która będzie przechowywać dane  tylko w czasie bieżącego połączenia.
+Tabela tymczasowa dostępna jest z wielu sesji.
+Zawartość takiej tabeli widoczna jest tylko dla aktualnej sesji.
+Wykorzystujemy taki byt do chwilowego przechowywania danych.
+Możemy stworzyć taką tabelę w sposób zbliżony do tworzenia zwykłej tabeli (różnica w dodaniu GLOBAL TEMPORARY):
+
+create global temporary table tabela_tymczasowa ( id_wiersza number, nazwa varchar2(40)
+);
+
+
+Wyższość tego rozwiązania nad tworzeniem zwykłej tabeli do tego samego celu, polega na tym że po zakończeniu sesji dane z tabeli tymczasowej znikają. 
+Dzięki temu nie zostają nam śmieci zajmujące miejsce, a zupełnie nie potrzebne nam później.
