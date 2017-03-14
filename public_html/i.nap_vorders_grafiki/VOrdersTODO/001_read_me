@@ -34,12 +34,18 @@ u1
  - WAZNE! jak testujesz EdifactOrdrspImport i jak zwróci błąd, to później debug jeszcze raz, bo inaczej cały czas zgłasza że nie widzi EJB
  - TODO -> w IncomingParser linia 201   prod = productsApi.getByCmpIndex(buyerProductId, this.doc.getSupplier().getId()); -> doc is null !!!
 
+1. jak wyśle do dostawcy edifact to jest status zaakceptowane a powinno wysłane do dostawcy ORDER
+2. danego dnia po odesłaniu do odbiorcy robi zwd 002 zamiast update 
+3. i to zwd 002 dostaje status otrzymane przez dostawce i nie ma daty dostawy 
+4. na zwd u odbiorcy popraw ilość potwierdzanom, po wysłani zmienia na ilosc zamawianą
+
+
 
 nasłuch: wpisuje sie po stronie dostawcy
 https://i2.naprzod.pl/VOrders/resources/vorders -- produkcyjnie
 http://192.168.0.208:40884/VOrders/resources/vorders -- na mój laptop
 
-nasłuch: wpisuje się po stronie zamawiającego(odbiorcy):
+nasłuch: wpisuje się po stronie zamawiającego(odbiorcy) Vendi:
 Megafruit: http://zamowienia.vendiservis.pl:8080/VOrders/resources/vorders - produkcynie 
 Megafruit: http://192.168.0.15:8080/VOrders/resources/vorders - testowo
 

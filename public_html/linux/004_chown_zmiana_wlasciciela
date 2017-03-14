@@ -1,0 +1,6 @@
+Aby zmienić także przynależność do grupy należy dopisać nazwę nowej grupy do nazwy użytkownika, odzielając obie nazwy kropką:
+
+chown krystian:root readme.txt
+
+Isnieje możliwość zmiany właściciela całego katalogu (z podkatalogami), aby to zrobić użyj opcji -R np:
+chown -R krystian dokumenty

@@ -1,0 +1,16 @@
+
+Do zmiany praw dostępu do plików w systemie Linux służy polecenie chmod.
+Składnia polecenia przy wykorzystaniu metody cyfrowej wygląda tak:
+chmod prawa_dostępu nazwa_pliku
+prawa_dostępu to jedna z opisanych wyżej trzycyfrowych liczb. 
+Przykładowo aby zmienić prawa dostępu do pliku readme.txt na -rw------- (prawo odczytu i zapisu tylko dla właściciela pliku) musiusz napisać:
+chmod 600 readme.txt
+Gdybyś chciał zmienić prawa dostępu do wszystkich plików w danym katalogu i jego podkatalogach skorzystaj z opcji -R Przykładowo aby ustawić zestaw uprawnień 644 dla wszystkich plików w katalogu /home/waldek/pub napisz tak:
+chmod -R 644 /home/waldek/pub
+
+
+Kto	Działanie	Uprawnienie
+u użytkownik	+ dać	r odczyt
+g grupa	- zabrać	w zapis
+o inni	= przypisać	x wykonanie
+a wszyscy	s suid	
