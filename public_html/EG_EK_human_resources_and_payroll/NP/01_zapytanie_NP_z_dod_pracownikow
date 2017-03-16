@@ -1,0 +1,19 @@
+
+
+
+SELECT prc_numer, prc_nazwisko, prc_imie, NP_KOD_NIEPELNOSPRAWNOSCI, NP_DATA_WPLYWU, NP_DATA_OD, NP_DATA_DO, NP_AKTUALNE_DO
+	   FROM ek_niepelnosprawnosci, ek_zatrudnienie, ek_pracownicy
+       WHERE np_kod_niepelnosprawnosci IN ('1','2','3')
+         AND NVL (np_aktualne_do, :d) >= :d
+		 and np_prc_id = prc_id
+         AND NVL (NP_DATA_WPLYWU, LAST_DAY(:d)) <= LAST_DAY(:d)
+		 and zat_prc_id = prc_id
+and ek_zatrudnienie.zat_data_zmiany = (
+     select max(zat_data_zmiany) from ek_zatrudnienie
+     where zat_prc_id = np_prc_id
+     and zat_typ_umowy = 0
+     and zat_data_zmiany <= LAST_DAY(:d))
+     --
+     and (ek_zatrudnienie.zat_data_do >= :d
+     or ek_zatrudnienie.zat_data_do is null)
+	 order by 2
