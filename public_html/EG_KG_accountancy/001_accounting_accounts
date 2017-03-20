@@ -10,18 +10,21 @@ select frm_nazwa, knt_pelny_numer, knt_nazwa, ks_tresc, ks_dok_data_zaksiegowani
  from kgt_ksiegowania, kgt_dokumenty, kg_konta, eat_firmy 
 where ks_dok_id = dok_id 
 and dok_frm_id = frm_id
-and dok_data_zaksiegowania between :dataOd and :data_do 
+and dok_data_zaksiegowania between :dataOd and :dataDo
 and (ks_knt_wn = knt_id ) 
 AND (ks_f_zaksiegowany = 'T' or ks_f_symulacja = 'T') 
 and knt_pelny_numer like :konto
+and dok_numer_wlasny not like 'BO%'
 union all 
 select frm_nazwa, knt_pelny_numer, knt_nazwa, ks_tresc, ks_dok_data_zaksiegowania , null WN, ks_kwota  MA 
  from kgt_ksiegowania, kgt_dokumenty, kg_konta, eat_firmy 
 where ks_dok_id = dok_id 
 and dok_frm_id = frm_id
-and dok_data_zaksiegowania between :dataOd and :data_do 
+and dok_data_zaksiegowania between :dataOd and :dataDo
 and (ks_knt_ma = knt_id ) 
 AND (ks_f_zaksiegowany = 'T' or ks_f_symulacja = 'T') 
 and knt_pelny_numer like :konto
+and dok_numer_wlasny not like 'BO%'
 )
 group by frm_nazwa, knt_pelny_numer, knt_nazwa, ks_tresc, ks_dok_data_zaksiegowania
+order by frm_nazwa, ks_dok_data_zaksiegowania
