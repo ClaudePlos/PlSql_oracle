@@ -1,0 +1,20 @@
+SELECT DATA.NA_DZIEN,ROZ_ID,ROZ_NUMER,ROZ_WAL_ID,ROZ_TYP,
+SUM(PL_KWOTA_WALUTY_WN),SUM(PL_KWOTA_WALUTY_MA),(SUM(PL_KWOTA_WALUTY_WN) - 
+SUM(PL_KWOTA_WALUTY_MA)),SUM(PL_KWOTA_WN),SUM(PL_KWOTA_MA),
+SUM(PL_KWOTA_EURO_WN),SUM(PL_KWOTA_EURO_MA), MIN (rozliczony),
+MIN(rozliczony_na_dzis) FROM NZT_ROZRACHUNKI, NZT_PLATNOSCI,			(SELECT TO_DATE('20-03-2017','DD-MM-YYYY') NA_DZIEN,'%' POTW FROM DUAL) DATA,
+			(SELECT r.pl_id rozl_pl_id, 
+			        CASE WHEN (TO_DATE('20-03-2017','DD-MM-YYYY')  >= 
+			                    nzp_status_platnosci.data_zaplaty(r.pl_id, 'N','%')) 
+			             THEN DECODE(r.PL_F_ROZNICA_KURSOWA, 'N',  r.PL_F_ROZLICZONA ,
+'T') 			             ELSE  r.PL_F_ROZNICA_KURSOWA END rozliczony,
+		       	 DECODE(r.PL_F_ROZNICA_KURSOWA, 'N',
+			              nzp_status_platnosci.f_rozliczona(r.pl_id,NULL,
+			                '%') ,'T') rozliczony_na_dzis
+			  FROM nzt_platnosci r) rozl  WHERE ( pl_roz_id = roz_id AND pl_f_anulowana 
+= 'N' and rozl_pl_id = pl_id ) AND (((( roz_kl_kod = :1)) AND ( roz_rp_rok = 
+:2))) GROUP BY DATA.NA_DZIEN, roz_id, roz_numer,roz_typ, roz_wal_id, roz_kl_kod 
+ORDER BY NLSSORT(ROZ_NUMER, 'NLS_SORT=BINARY') ASC
+
+:1 = 1
+:2 = 2017
