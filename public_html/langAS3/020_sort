@@ -1,0 +1,5 @@
+
+// sortuje szczegoly 
+szczegolyRaportu.sort = new Sort();
+szczegolyRaportu.sort.fields = [ new SortField( "srpKolejnosc" )];
+szczegolyRaportu.refresh();
