@@ -1,0 +1,55 @@
+
+declare
+begin
+for x in ( 
+select frm_id, frm_nazwa from eat_firmy where frm_opis = 'Z' -- +vendi
+union all 
+select 300038, 'VENDI' from dual
+)
+LOOP
+begin
+eap_globals.USTAW_firme(x.frm_id);
+eap_globals.USTAW_konsolidacje('N');
+end;
+for rek in (
+select * from (
+SELECT prc_numer, prc_nazwisko, prc_imie, ld_pozostalo urlopu_zostalo
+,(select sum(sk_wartosc) from ek_skladniki, ek_listy, ek_def_skladnikow 
+where sk_lst_id = lst_id
+and lst_frm_id =  x.frm_id
+and sk_frm_id = x.frm_id
+and sk_dsk_id = dsk_id
+--and lst_drl_kod = 'LPLAC'
+and ( dsk_kod in (610) or dsk_kod in (select dsk_kod from ek_def_skladnikow where dsk_nazwa like '%OFP%'))
+and to_char(lst_data_obliczen,'YYYY-MM') = :okres
+and sk_prc_id = prc_id) wynagrodzenie_sr
+, (select max(sk_kod) from ek_zatrudnienie, css_stanowiska_kosztow where
+(NVL(zat_data_do, to_date('2099', 'YYYY')) >= to_date(:okres, 'YYYY-MM')
+and zat_data_zmiany <= last_day(to_date(:okres, 'YYYY-MM')))
+and zat_typ_umowy = 0
+and zat_sk_id = sk_id
+and zat_prc_id = prc_id
+and zat_frm_id = x.frm_id) sk_kod
+, (select max(stn_nazwa) from ek_zatrudnienie, zpt_stanowiska where
+(NVL(zat_data_do, to_date('2099', 'YYYY')) >= to_date(:okres, 'YYYY-MM')
+and zat_data_zmiany <= last_day(to_date(:okres, 'YYYY-MM')))
+and zat_typ_umowy = 0
+and zat_stn_id = stn_id
+and zat_prc_id = prc_id
+and zat_frm_id = x.frm_id) stanowisko
+FROM EK_LIMITY_DANE, EK_LIMITY_ABSENCJI, ek_pracownicy
+WHERE ld_la_id = la_id
+and prc_id = la_prc_id
+and ld_frm_id =  x.frm_id
+and la_frm_id= x.frm_id
+and ld_pozostalo > 0
+and la_dg_kod = 'A_UR1'
+and ld_od <= to_date(:okres||'-01','YYYY-MM-DD')-1 and ld_do >= to_date(:okres||'-01','YYYY-MM-DD')-1)
+where (sk_kod like 'A%' or sk_kod like 'V%' or upper(stanowisko) like '%KIER%')
+order by sk_kod, prc_nazwisko
+)
+loop
+ dbms_output.put_line ( x.frm_nazwa||';'||rek.sk_kod||';'||rek.stanowisko||';'||rek.prc_numer||';'||rek.prc_nazwisko||';'||rek.prc_imie||';'||rek.urlopu_zostalo);
+end loop;
+END LOOP;
+END;
