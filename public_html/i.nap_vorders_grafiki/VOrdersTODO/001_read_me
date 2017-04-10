@@ -14,7 +14,12 @@ Update production version:
 
 u2.1 start glassfisg (w glassfish/bin): ./asadmin start-domain
 u2.2 jak aktualizujesz to pobierz z svn na komp stacjonarny KS 0.15 i tam w netbensie zrób war
-
+u2.3 aby miec war to clean and build na projekcie i tam gdzie jest zapisany to jest folder target. Po clean and build dostaniwmy tam plik war.
+u2.4 !!! przed zrobienienm war w PM zmienmy na oracle_local
+u2.5 zmieńmy mu nazwę na VOrders.war
+u2.6 na stronie http://zamowienia.vendiservis.pl:4848 mama admin console p: admin - HpMi
+u2.7 w Aplication zaznaczamy VOrders i robimy Redeploy i wskazujemy nasz war z target
+u2.8 na koniec może być potrzebne ./asadmin start-domain na putty
 
 Działanie strony: 
 u1 loguje się i składa nowe ZWK, 
