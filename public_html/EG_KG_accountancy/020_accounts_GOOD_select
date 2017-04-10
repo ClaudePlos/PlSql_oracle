@@ -11,4 +11,5 @@ AND (ks_f_zaksiegowany = 'T' or ks_f_symulacja = 'T')
 --AND ks_rodzaj = 'PK' 
 --and dok_numer_wlasny not like 'BO%' -- czy w styczniu z BO czy bez
 and knt_pelny_numer like '234%02' 
+order by 1
 
