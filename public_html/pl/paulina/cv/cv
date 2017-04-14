@@ -1,0 +1,111 @@
+package pl.cv;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.pl.model.*;
+
+/**
+ *
+ * @author paulina.skowrońska
+ */
+public class paulinaCV {
+    
+    
+    
+    public paulinaCV()
+    {
+            cvDTO cv = new cvDTO;
+
+            Person newEmployee = new Person();
+            newEmployee.imie = "Paulina";
+            newEmployee.nazwisko = "Skowrońska";
+            newEmployee.pesel = 95........;
+            newEmployee.email = "TODO";
+            newEmployee.mobilePhone = "TODO";
+
+            cv.add(newEmployee);
+            
+            
+            Adres adres = new Adres();
+            adres.city = "Łódź"
+            adres.street = "TODO"       
+            adres.postcode = "93-TODO"   
+            cv.add(adres);
+            
+            cv.listEducation = getEgducation();
+            cv.listWorkExperience = getWorkExperience();
+            cv.technicalSkills = getTechnicalSkills();    
+
+    }
+    
+    private List<Education> getEgducation() {
+        
+        List<Education> listEdu = new ArrayList<Education>();
+        Education edu01 = new Education();
+        edu01.from = "TODO data od "; 
+        edu01.to = "TODO data do ";
+        edu01.type = "high school";        
+        edu01.schoolName = "TODO nazwa liceum "; 
+        edu01.profile = "TODO nazwa profilu"; 
+        //dodaj co tam chcesz jeszcze 
+        listEdu.add(edu01);
+                
+        Education edu02 = new Education();
+        edu02.from = "TODO data od "; 
+        edu02.to = "TODO data do "; 
+        edu02.type = "university"; 
+        edu02.schoolName = "TODO nazwa studia  "; 
+        edu02.profile = "TODO nazwa profilu";         
+        listEdu.add(edu02);   
+        // .... i tak dalej jak coś masz
+        
+        return listEdu;
+    }
+    
+    
+    private List<WorkExperience>  getWorkExperience() {
+        
+        List<WorkExperience> listEdu = new ArrayList<WorkExperience>();
+        
+        WorkExperience workExp01 = new WorkExperience();
+        workExp01.from = "TODO data od  "; 
+        workExp01.to = "TODO data do "; 
+        workExp01.typeOfWork = "internship"; // to jest chyba staż ale sprawdz jak jest po ang
+        workExp01.cimpanyType = "Development company"; 
+        workExp01.companyName = "Synap"; //to taka nasza firma informatyczna, napisz że byłaś z miesiąc, jak będą chcieli jakiś papier to ci dorobię, że byłaś 
+        // jak zapytają co robiłaś, to powiedz, że pisałaś zapytania SQL, to jest prosty język, pewnie znasz to się obronisz jak sprawdzą
+        //dodaj co tam chcesz jeszcze 
+        listEdu.add(workExp01);
+        
+        
+        WorkExperience workExp02 = new WorkExperience();
+        workExp02.from = "TODO data od  "; 
+        workExp02.to = "TODO data do "; 
+        workExp02.typeOfWork = "Full time";
+        workExp02.cimpanyType = "Development company"; 
+        workExp02.companyName = "Anfix"; // to jest moja firma, napisz że pracowałaś z 3 miesiace. Jak będą pytac co to za firma, to powiedz brata  
+        // jak zapytają co robiłaś, to że głównie grafika w photoshopie, corel itp. To zawsze wybronisz, bo nikt nie sprawdzi, czy potrafisz rysować,
+        // bo każdy rysuje 
+        //dodaj co tam chcesz jeszcze 
+        listEdu.add(workExp01);
+        
+        return listEdu;
+        
+    }
+    
+    
+    private TechnicalSkills getTechnicalSkills() {
+
+        TechnicalSkills techSkills = new TechnicalSkills();
+        
+        techSkills.programingLanguage = "C++, Java, HTML"; //dodaj co tam jeszcze znasz
+        techSkills.software = "Photoshop, nazwa programu w którym piszesz C++, Sublime Text"; //Sublime Text zobacz w necie, fajny edytor do pisania code
+        techSkills.database = "MtSQL"; // możen znasz jakieś bbazt danych
+        techSkills.operationSystem = "Windows, OS X, Android, Linux"; //OS X mogę pokazać w domu, prosty system 
+        
+        return techSkills;    
+    }
+    
+    
+    // jeszcze możesz zrobić funkcję na hobby i wszystko :) 
+}
