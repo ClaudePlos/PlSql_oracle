@@ -17,3 +17,8 @@ Instukcja Generacji:
 2. NZ > Inne > Wersje rejestrow (utrwal i przejdź do generacji)
 3. 1 formatka -> Generuj JPK. Po wygenerowaniu zaznacz i zatwierdź.
 4. Już z MP-> Zaznaczyć jako Wysyłka do Azure i clikc on "Twórz/wyślij plik"
+
+!!!! -> KOD_PODATNIKA wartosc domyslan w NZ ustawiamy właściciela
+-- 01. Dla Pit 4 ustawia się w CKK > Wartosci domyslne > WLASCICIEL > US
+-- 02. Dla VAt NZ > Wartosci domyslne > TYTUL > KOD_URZEDU_SKARBOWEGO
+-- 03. Dla raportów VAT jeszcze NZ > Wartosci domyslne > RAPORTY > KOD_URZEDU_SK
