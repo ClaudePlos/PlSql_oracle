@@ -1,0 +1,31 @@
+CREATE OR REPLACE TRIGGER CHECK_DUPLICATE_SK
+before insert or update on NAP_BUDZETY_STATUSY
+FOR each ROW
+-- add klaudiusz 2017-04-26
+DECLARE
+v_dup number;
+
+-- dodajesz to if you want uniknac mutacji tabeli ORA-04091
+-- i mozna zrobic zapytanie na tabeli sprawdzanej 
+PRAGMA AUTONOMOUS_TRANSACTION;
+
+BEGIN
+
+IF :new.sk_kod is not null THEN 
+
+    select count(id) INTO v_dup from NAP_BUDZETY_STATUSY 
+     where SK_KOD =:NEW.SK_KOD
+       and RODZAJ_DZIALALNOSCI = :NEW.RODZAJ_DZIALALNOSCI 
+       and OKRES = :NEW.OKRES
+       and STATUS = :NEW.STATUS;
+
+
+ if v_dup > 0 then
+   RAISE_APPLICATION_ERROR(-20001, 'Zdublowany wiersz - err' );
+end if;
+
+END IF;
+
+ COMMIT;
+END;
+/
