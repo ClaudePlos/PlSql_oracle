@@ -1,0 +1,17 @@
+
+ORA-31623: a job is not attached to this session via the specified handle
+
+jaki masz rozmiar stream size?
+
+connect / as sysdba
+show parameter streams_pool
+select * from v$sgainfo; 
+
+hmmm no to nie wiem....a kiedy to sie zaczelo ? wczesniej dzialo? cos zmianieales? jakis restart byl?
+hmmm no to nie wiem....a kiedy to sie zaczelo ? wczesniej dzialo? cos zmianieales? jakis restart byl?
+
+wszystko jest VALID?
+SELECT comp_name, status, version
+FROM   dba_registry;
+
+!!! restart db hepls -> shutdown immediate and start
