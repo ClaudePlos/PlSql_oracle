@@ -1,0 +1,1 @@
+String rd = dywizja.equals("C") ? "531" : "*";  -- jeśli C to 531 a jak nie to * 
