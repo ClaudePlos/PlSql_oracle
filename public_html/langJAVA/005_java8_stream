@@ -1,4 +1,4 @@
-
+1
 List<String> strings = Arrays.asList("abc", "", "bc", "efg", "abcd","", "jkl");
 List<String> filtered = strings.stream()string -> !string.isEmpty()).collect(Collectors.toList());
 

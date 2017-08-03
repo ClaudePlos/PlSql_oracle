@@ -2,4 +2,7 @@
 select sk_kod, wap_wartosc  
  from css_wartosci_pol, css_stanowiska_kosztow 
 where wap_id = sk_wap_id 
- and wap_dep_id = 100026
+ and wap_dep_id = 100026  -- rodzaj kosztu
+
+
+100370 - frmID

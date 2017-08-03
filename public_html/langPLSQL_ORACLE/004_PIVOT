@@ -9,11 +9,7 @@ and (ks_knt_wn = knt_id or ks_knt_ma = knt_id)
 AND (ks_f_zaksiegowany = 'T' or ks_f_symulacja = 'T')
 --AND ks_rodzaj = 'PK'
 and knt_pelny_numer like '531%' ) A
-PIVOT
-   ( SUM(ks_kwota)
-     FOR sk_kod
-     IN ('C200','C156')
-)
+isiusz
 
 
 -- for a period -> facility
