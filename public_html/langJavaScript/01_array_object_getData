@@ -1,0 +1,20 @@
+
+
+-- 01 example
+
+public validate:any = [];
+
+var params = {
+        "fleet": this._value
+      };
+
+validate.push(params);
+
+console.log( this.meetingMinutesService.validate );
+
+let validate = this.meetingMinutesService.validate;
+
+let result = validate.map(function(a) {return a.fleet;});
+
+console.log( result );
+
