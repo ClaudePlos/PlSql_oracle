@@ -75,6 +75,35 @@ and zat_prc_id = prc_id;
 	 order by sk_kod, prc_nazwisko, zat_data_zmiany
 
 
+--***************************************************************************
+--- Umowy o pracę - wielofirmowo - etaty - obKod - na dzien
+begin
+eap_globals.USTAW_konsolidacje('T');
+end;
+
+
+select ob_pelny_kod, sum(SUBSTR(wsl_alias,1,3)/SUBSTR(wsl_alias,4,6)) etat from ek_pracownicy, ek_zatrudnienie, css_Stanowiska_kosztow, css_obiekty_w_przedsieb, css_stanowiska_obiekty, eat_firmy,
+(select wsl_wartosc, wsl_wartosc_max, wsl_alias from css_wartosci_slownikow where wsl_sl_nazwa like 'TYP_ETATU') etat
+where zat_prc_id=prc_id
+and zat_sk_id = sk_id
+and zat_frm_id = frm_id
+and so_sk_id = sk_id
+and so_ob_id = ob_id
+and zat_wymiar=wsl_wartosc
+and sk_kod = 'Z062'
+and ek_zatrudnienie.zat_data_zmiany = (
+	 select max(zat_data_zmiany) from ek_zatrudnienie 
+	 where zat_prc_id = prc_id
+	 and zat_typ_umowy = 0 
+	 and zat_data_zmiany <= :na_dzien) -- ewent. do
+	 --
+	 and (ek_zatrudnienie.zat_data_do >= :na_dzien -- ewent. od
+	 or ek_zatrudnienie.zat_data_do is null)
+	 and zat_typ_umowy = 0
+group by ob_pelny_kod
+
+
+
 
 --- wyliczanie etatów rocznie - GOOD
 declare 
