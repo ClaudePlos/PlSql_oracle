@@ -14,3 +14,9 @@ Date d1 = new Date();
 Date d2 = new Date();
 
 d2.setTime(d1.getTime() + 1 * 24 * 60 * 60 * 1000);
+
+
+    DateTimeFormatter DATEFORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    LocalDate ld = LocalDate.parse("2017-03-13", DATEFORMATTER);
+    LocalDateTime ldt = LocalDateTime.of(ld, LocalDateTime.now().toLocalTime());
+    System.out.println(ldt);
