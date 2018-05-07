@@ -1,0 +1,61 @@
+
+-- od 1 do 5 jak zaczynasz !!!!
+-- jako sys 
+--1. zobacz XDBHI_IDX jest włączony
+select owner, index_name, status, domidx_status, domidx_opstatus,funcidx_status from dba_indexes where domidx_opstatus is not null;
+
+--2. jeżeli nie to
+alter index XDB.XDB$ACL_XIDX rebuild; -- i zobacz czy się zmieniło
+
+--3. nadaj grand 
+-- As DBA (for example user SYS) we have to execute the following statements to free the way for the WC account:
+grant execute on utl_http to naprzod
+grant execute on dbms_lock to naprzod
+
+--4.  
+BEGIN
+  DBMS_NETWORK_ACL_ADMIN.create_acl (
+    acl          => 'local_sx_acl_file.xml', 
+    description  => 'A test of the ACL functionality',
+    principal    => 'NAPRZOD',
+    is_grant     => TRUE, 
+    privilege    => 'connect',
+    start_date   => SYSTIMESTAMP,
+    end_date     => NULL);
+end;
+
+--5. 
+begin
+  DBMS_NETWORK_ACL_ADMIN.assign_acl (
+    acl         => 'local_sx_acl_file.xml',
+    host        => '192.168.0.228', 
+    lower_port  => 40884,
+    upper_port  => NULL);    
+end; 
+
+
+commit
+
+-- tutaj sprawdzasz do czego mozna wysyłac http
+select * from dba_network_acls;
+
+-- nadanie uprawnień !!!!
+--6
+BEGIN
+  DBMS_NETWORK_ACL_ADMIN.add_privilege (
+    acl          => 'local_sx_acl_file.xml', 
+    principal    => 'ADMIN',
+    is_grant     => TRUE, 
+    privilege    => 'connect',
+    start_date   => SYSTIMESTAMP,
+    end_date     => NULL);
+end;
+
+--7 dodanie noego adresu 
+begin
+  DBMS_NETWORK_ACL_ADMIN.assign_acl (
+    acl         => 'local_sx_acl_file.xml',
+    host        => '192.168.0.228', 
+    lower_port  => 40884,
+    upper_port  => NULL);    
+end; 

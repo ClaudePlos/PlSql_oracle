@@ -1,0 +1,29 @@
+
+Załóżmy, że mamy metodę z adnotacją @Transactional (gdy Spring zarządza transakcjami) lub metodę ejb z CMT.
+
+Standardowy flow wygląda następująco.
+
+Na wejściu do metody tworzona jest transakcja.
+W trakcie metody są wykonywane różne operacje na encjach. Hibernate może sam zadecydować w trakcie metody, że część zmian trzeba wrzucić do bazy (domyślnie FlushMode jest ustawiony na AUTO, więcej: http://docs.jboss.org/hiberna[...]/org/hibernate/FlushMode.html)
+Na koniec metody wrzucane są pozostałe zmiany.
+Transakcja jest commitowana.
+Dodanie flush() wymusza wrzucenie zmian do bazy, ale jeszce nie commituje transakcji.
+Od tej chwili zmiany są widoczne dla innych transakcji odczytujących dane z poziomem izolacji read uncommitted.
+Jeżeli po flush() nastąpi rollback, to wszystkie zmiany zostaną wycofane.
+
+Kiedy przydaje się flush:
+-w jednej sesji zmieniamy bardzo dużo obiektów. Aby uniknąć problemów z pamięcią należy w paczkach po np. 200 encji wykonywać zmiany i później wykonywać flush() i następnie clear().
+-w jednej sesji najpierw zmieniamy stan w obiekcie, a później w tej samej sesji wywołujemy zapytanie jdbc/procedurę, która korzysta z tych danych. Oczywiście, aby to zapytanie/procedura mogła widzieć dane, muszą one być w bazie. Zapytanie/procedura działa w tej samej transakcji, więc będzie widzieć dane bez potrzeby zmiany poziomu izolacji
+
+Ja się dołączam do pytania i dodatkowo chciałbym się dowiedzieć czy pod Hibernatem jest tak samo? Tzn przy samodzielnym Hibernacie, a nie jako dostawcy JPA.
+
+Nie ma tu znaczenia, czy korzystasz z Session, czy EntityManagera. Obie klasy zachowują się w tym przypadku tak samo.
+
+Z tego co jeszcze wywnioskowałem (a chciałbym potwierdzić) to to że metody detach() i clear() działają również natychmiast pomimo że są wywoływane w transakcji. To znaczy że obiekt encji jest odrywany od Contextu w momencie wywołania tych metod, bez czekania na operację commit() i już nie "manged" w dalszym ciągu transakcji
+
+http://docs.jboss.org/hiberna[...]nate/Session.html#clear%28%29:
+
+Completely clear the session. Evict all loaded instances and cancel all pending saves, updates and deletions. Do not close open iterators or instances of ScrollableResults.
+
+Z tego powodu zawsze przed clear() należy wywoływać flush().
+W rzeczywistości clear() przydaje się jedynie wtedy, gdy przetwarzamy wiele obiektów w pętli i co pewien czas musimy robić flush(); clear();

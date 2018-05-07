@@ -57,7 +57,7 @@ group by ob_pelny_kod
 select * from ek_zatrudnienie, ek_pracownicy, ek_etapy_umowy  where
 (NVL(zat_data_do, to_date('2099', 'YYYY')) >= to_date('2014-03', 'YYYY-MM')
 and zat_data_zmiany <= last_day(to_date('2014-03', 'YYYY-MM')))
-and zat_typ_umowy != 0
+and zat_typ_umowy != 0  -- 6 o współpracę 
 and eu_Zat_id = zat_id
 and eu_miesiac = '2014-03-01'
 and zat_prc_id = prc_id;

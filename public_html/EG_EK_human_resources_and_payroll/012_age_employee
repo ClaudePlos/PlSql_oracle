@@ -1,0 +1,2 @@
+
+round(TRUNC(MONTHS_BETWEEN(SYSDATE, prc_data_ur))/12)
