@@ -13,6 +13,9 @@ Date d1 = new Date();
 
 Date d2 = new Date();
 
+startDate =  dt.parse(startDateString);
+startDate = new Date(startDate.getTime() + 3600 * 17000);
+
 d2.setTime(d1.getTime() + 1 * 24 * 60 * 60 * 1000);
 
 

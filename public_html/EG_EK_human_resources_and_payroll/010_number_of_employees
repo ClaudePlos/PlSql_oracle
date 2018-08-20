@@ -1,3 +1,46 @@
+-- 2018
+
+
+-- dokładnie il prac w firmie
+select frm_nazwa, ob_pelny_kod, typ_umowy, count(prc_id) prac from (
+--- na UZ
+SELECT distinct PRC_ID,PRC_NUMER,PRC_NAZWISKO,PRC_IMIE,PRC_NIP,PRC_DATA_UR,PRC_PESEL,PRC_DOWOD_OSOB, frm_nazwa, ob_pelny_kod
+, (select wsl_alias from CSS_WARTOSCI_SLOWNIKOW where wsl_sl_nazwa = 'TYP_UMOWY' and wsl_wartosc = zat_typ_umowy) typ_umowy
+ FROM EK_PRACOWNICY, ek_zatrudnienie, css_Stanowiska_kosztow, css_obiekty_w_przedsieb, css_stanowiska_obiekty, eat_firmy  
+WHERE zat_prc_id = prc_id
+and zat_sk_id = sk_id
+and zat_frm_id = frm_id
+and so_sk_id = sk_id
+and so_ob_id = ob_id
+and zat_id in (
+  SELECT zat_id FROM ek_zatrudnienie
+  WHERE prc_id = zat_prc_id 
+  AND ( zat_typ_umowy in (1,2,3,10) ) -- uz
+  AND zat_data_zmiany <= :data_od AND NVL(zat_data_do, sysdate) >= :data_do)
+union all 
+-- na UP
+SELECT distinct PRC_ID,PRC_NUMER,PRC_NAZWISKO,PRC_IMIE,PRC_NIP,PRC_DATA_UR,PRC_PESEL,PRC_DOWOD_OSOB, frm_nazwa, ob_pelny_kod
+, (select wsl_alias from CSS_WARTOSCI_SLOWNIKOW where wsl_sl_nazwa = 'TYP_UMOWY' and wsl_wartosc = zat_typ_umowy) typ_umowy
+ FROM EK_PRACOWNICY, ek_zatrudnienie, css_Stanowiska_kosztow, css_obiekty_w_przedsieb, css_stanowiska_obiekty, eat_firmy  
+WHERE zat_prc_id = prc_id
+and zat_sk_id = sk_id
+and zat_frm_id = frm_id
+and so_sk_id = sk_id
+and so_ob_id = ob_id
+    AND zat_id in( SELECT zat_id FROM ek_zatrudnienie 
+    WHERE prc_id = zat_prc_id 
+    AND zat_typ_umowy in (0,7) 
+    AND :data_od BETWEEN zat_data_zmiany AND NVL(zat_data_do, :data_do)) 
+order by PRC_numer
+)
+group by ob_pelny_kod, frm_nazwa, typ_umowy
+order by frm_nazwa, ob_pelny_kod, typ_umowy 
+
+
+
+
+
+
 -- add k.skowronski 2005
 
 -- 0 UP
@@ -19,6 +62,7 @@ and ek_zatrudnienie.zat_data_zmiany = (
 	 and zat_typ_umowy = 0
 
 -- shorter version  - KS 2012-06-26
+-- 2018-05-09 -- najlepiej zbiera dane !!!!! to zapytanie 
 select count(distinct prc_id) from ek_zatrudnienie, ek_pracownicy where
 (NVL(zat_data_do, to_date('2099', 'YYYY')) >= to_date('2012-01', 'YYYY-MM')
 and zat_data_zmiany <= last_day(to_date('2012-01', 'YYYY-MM')))
