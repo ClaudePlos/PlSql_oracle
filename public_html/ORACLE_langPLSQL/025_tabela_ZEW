@@ -1,5 +1,34 @@
+//CSV
 CREATE OR REPLACE DIRECTORY ext_tab_data AS '/data';
 
+drop table PZU_CATERMED_ext;
+
+CREATE TABLE PZU_CATERMED_ext (
+  imie      VARCHAR2(50),
+  nazwisko      VARCHAR2(50),
+  pesel  VARCHAR2(50)
+)
+ORGANIZATION EXTERNAL (
+  TYPE ORACLE_LOADER
+  DEFAULT DIRECTORY dump_dir
+  ACCESS PARAMETERS (
+    RECORDS DELIMITED BY NEWLINE
+    FIELDS TERMINATED BY ';'
+    optionally enclosed BY '"'
+    lrtrim
+    missing field VALUES are NULL
+  )
+  LOCATION ('PZU_CAT.csv')
+)
+PARALLEL 5
+REJECT LIMIT UNLIMITED;
+
+
+
+
+
+
+////*******************************************************************8
 drop table countries_ext;
 
 CREATE TABLE PZU_CATERMED_ext (
