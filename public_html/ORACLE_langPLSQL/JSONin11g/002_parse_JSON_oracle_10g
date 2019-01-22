@@ -1,0 +1,45 @@
+
+
+-- add klaudiusz 2019-01-22
+-- procedure 
+declare
+v_json varchar2(4000);
+v_result1 varchar2(400);
+v_result2 varchar2(400);
+v_result3 varchar2(400);
+begin 
+select dod_info_json into v_json
+from nzap_pozycje_akceptacji where akc_id = 1789090;
+--
+select 
+  regexp_replace(regexp_substr('['||v_json||']'
+,'"TransNumerRej":\s*("(\w|[..])*")', 1, level)
+,'"TransNumerRej":\s*"((\w|[..])*)"', '\1', 1, 1) TransNumerRej
+, regexp_replace(regexp_substr('['||v_json||']'
+,'"TransPrzebieg":\s*("(\w|[..])*")', 1, level)
+,'"TransPrzebieg":\s*"((\w|[..])*)"', '\1', 1, 1) TransPrzebieg 
+, regexp_replace(regexp_substr('['||v_json||']'
+,'"TransRodzaj":\s*"(.*| )*"', 1, level)
+,'"TransRodzaj":\s*"(.*)"', '\1', 1, 1) TransRodzaj
+into v_result1, v_result2, v_result3
+from dual
+connect by regexp_substr('['||v_json||']', '"val":\s*("(\w|[..])*")', 1, level) is not null;
+--
+dbms_output.PUT_LINE(v_result1||' '||v_result2||' '||v_result3);
+end;
+
+
+-- select 
+select 
+  regexp_replace(regexp_substr('[{"TransNumerRej": "el234","TransPrzebieg": "500100","TransRodzaj": "OLEJ SILNIKOWY"}]'
+,'"TransNumerRej":\s*("(\w|[..])*")', 1, level)
+,'"TransNumerRej":\s*"((\w|[..])*)"', '\1', 1, 1) TransNumerRej
+, regexp_replace(regexp_substr('[{"TransNumerRej": "el234","TransPrzebieg": "500100","TransRodzaj": "OLEJ SILNIKOWY"}]'
+,'"TransPrzebieg":\s*("(\w|[..])*")', 1, level)
+,'"TransPrzebieg":\s*"((\w|[..])*)"', '\1', 1, 1) TransPrzebieg
+, regexp_replace(regexp_substr('[{"TransNumerRej": "el234","TransPrzebieg": "500100","TransRodzaj": "OLEJ SILNIKOWY"}]'
+,'"TransRodzaj":\s*"(.*| )*"', 1, level)
+,'"TransRodzaj":\s*"(.*)"', '\1', 1, 1) TransRodzaj
+from dual
+connect by regexp_substr('[{"TransNumerRej": "el234","TransPrzebieg": "500100","TransRodzaj": "OLEJ SILNIKOWY"}]', '"val":\s*("(\w|[..])*")', 1, level) is not null
+;

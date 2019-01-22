@@ -1,7 +1,10 @@
 -- jeden parametr 
 <NO>Import</NO><WX>190</WX><WY>80</WY><PA>T</PA>
 <01><NE>Data aneksu</NE><LS>CALENDAR</LS><XP>64</XP><ZO></ZO><YP>22</YP><XE>64</XE><YE>15</YE></01>
-<KL>prc_id</KL><23><XP>99</XP><YP>46</YP><XE>83</XE><YE>16</YE></23><22><XP>9</XP><YP>46</YP><XE>83</XE><YE>16</YE></22><RS>T</RS>
+<KL>prc_id</KL>
+<23><XP>99</XP><YP>46</YP><XE>83</XE><YE>16</YE></23>
+<22><XP>9</XP><YP>46</YP><XE>83</XE><YE>16</YE></22>
+<RS>T</RS>
 
 -- dwa parametry z załączaniem dokumentów 
 <KL>dum_um_id</KL><TP>*</TP><NP>*</NP><DS>c:\</DS><TA>I</TA><PF>T</PF>
@@ -14,9 +17,24 @@
 
 -- 
 <KL>dum_um_id</KL>
-<01><NE>Rok</NE><ZO></ZO><XP>107</XP><YP>22</YP><DP>N</DP><ZP>N</ZP></01>
 <NO>TESTuje to</NO>
-<23><XP>103</XP><YP>52</YP><XE>83</XE><YE>16</YE></23>
 <WX>200</WX><WY>100</WY><PA>T</PA>
+<01><NE>PAR1</NE><ZO></ZO><XP>107</XP><YP>22</YP><DP>N</DP><ZP>N</ZP></01> -- DP i ZP któreś od wpisywania 
+<02><NE>PAR2</NE><ZO></ZO><XP>20 </XP><YP>22</YP><DP>N</DP><ZP>N</ZP></02>
+<03><NE>PAR3</NE><ZO></ZO><XP>64 </XP><YP>22</YP><XE>64</XE><YE>15</YE></03>
+
+<23><XP>103</XP><YP>52</YP><XE>83</XE><YE>16</YE></23>
 <22><XP>11</XP><YP>52</YP><XE>83</XE><YE>16</YE></22>
-<02>02<XP>20</XP><YP>22</YP><NE>Miesiąc</NE><ZO></ZO><ZP>N</ZP><DP>N</DP></02>
+<LS>CALENDAR</LS>
+
+
+<KL>dum_id</KL>
+<NO>Aktualizuj wartosc umowy</NO>
+<WX>200</WX><WY>220</WY><PA>T</PA>
+<01><NE>Ilość miesięcy umowy</NE><ZO>select nap_zk_tools.umowa_podaj_il_mc(:id) from dual</ZO><XP>10</XP><YP>22</YP></01>
+<02><NE>Wartość miesieczna umowy netto </NE><ZO></ZO><XP>10</XP><YP>52</YP></02>
+<03><NE>Wartość miesieczna umowy brutto</NE><ZO></ZO><XP>10</XP><YP>82</YP></03>
+<22><XP>11 </XP><YP>112</YP><XE>83</XE><YE>16</YE></22>
+<23><XP>103</XP><YP>112</YP><XE>83</XE><YE>16</YE></23>
+
+<24><XP>11 </XP><YP>102</YP><XE>83</XE><YE>16</YE></24>

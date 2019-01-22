@@ -31,7 +31,7 @@ select regexp_replace(regexp_substr('[{"date": "01-2016", "val":"100.22"},{"date
 ,'"date":\s*("(\w|[-])*")', 1, level)
 ,'"date":\s*"((\w|[-])*)"', '\1', 1, 1) date_period
 from dual
-connect by regexp_substr('[{"date": "01-2016", "val":"100.22"},{"date": "02-2016","val": "200.10"},{"date": "03-2016","val": "200.15"}]', '"val":\s*("(\w|[..])*")', 1, level) is not null
+connect by regexp_substr('[{"date": "01-2016", "val":"100.22"},{"date": "02-2016","val": "200110"},{"date": "03-2016","val": "200.15"}]', '"val":\s*("(\w|[..])*")', 1, level) is not null
 ;
 
 
