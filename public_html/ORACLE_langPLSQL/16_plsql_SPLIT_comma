@@ -1,2 +1,9 @@
 select , regexp_substr('SMITH;ALLENsdf','[^;]+', 1, level) from dual
 connect by regexp_substr('SMITH;ALLENsdf', '[^;]+', 1, level) is not null;
+
+
+
+
+SELECT Substr('F/P/O', 1, Instr('F/P/O', '/') - 1) part1, 
+       Substr('F/P/O', Instr('F/P/O', '/') + 1)    part2 
+FROM   dual

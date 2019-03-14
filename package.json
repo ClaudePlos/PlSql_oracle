@@ -1,7 +1,13 @@
 {
     "name": "PlSql_oracle",
     "version": "1.0.0",
-    "keywords": ["util", "functional", "server", "client", "browser"],
+    "keywords": [
+        "util",
+        "functional",
+        "server",
+        "client",
+        "browser"
+    ],
     "author": "k.skowronski",
     "contributors": [],
     "dependencies": {}
