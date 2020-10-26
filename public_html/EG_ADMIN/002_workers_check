@@ -1,0 +1,13 @@
+begin
+eap_globals.USTAW_konsolidacje('T');
+end;
+
+
+select sk_wartosc, frm_nazwa from ek_skladniki, ek_listy, eat_firmy
+where sk_lst_id = lst_id
+and sk_frm_id = frm_id
+and sk_dsk_id in (select dsk_id from ek_def_skladnikow where dsk_kod in (200,999))
+and to_char(lst_data_obliczen,'YYYY-MM') = '2020-01'
+and sk_prc_id  = 245217
+
+AS 245217
