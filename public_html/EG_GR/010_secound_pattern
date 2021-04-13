@@ -1,0 +1,12 @@
+begin
+eap_globals.ustaw_konsolidacje('T');
+open :cu for
+--
+--<-- put here query 
+--
+eap_globals.ustaw_konsolidacje('N');
+exception
+  when others then
+    eap_globals.ustaw_konsolidacje('N');
+    raise;
+end;
