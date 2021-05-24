@@ -1,3 +1,26 @@
+-- add 2021-05-24
+-- with company
+select frm_nazwa, knt_pelny_numer, ks_kwota, ks_tresc, dok_data_zaksiegowania 
+, (select knt_pelny_numer from kg_konta where knt_id = ks_knt_wn) konto_wn
+, (select knt_pelny_numer from kg_konta where knt_id = ks_knt_ma) konto_ma
+, case when ks_knt_wn is not null and (select knt_pelny_numer from kg_konta where knt_id = ks_knt_wn) like '5%w__' then ks_kwota else 0 end wn
+, case when ks_knt_ma is not null and (select knt_pelny_numer from kg_konta where knt_id = ks_knt_ma) like '5%w__' then -ks_kwota else 0 end ma
+, case when ks_knt_wn is not null and (select knt_pelny_numer from kg_konta where knt_id = ks_knt_wn) like '5%w__' then ks_kwota else 0 end 
++ case when ks_knt_ma is not null and (select knt_pelny_numer from kg_konta where knt_id = ks_knt_ma) like '5%w__' then -ks_kwota else 0 end saldo
+from kgt_ksiegowania, kgt_dokumenty, kg_konta, eat_firmy
+where ks_dok_id = dok_id 
+and dok_frm_id = frm_id
+and dok_data_zaksiegowania between :1 and :2 
+and (ks_knt_wn = knt_id or ks_knt_ma = knt_id) 
+AND (ks_f_zaksiegowany = 'T' or ks_f_symulacja = 'T') 
+--AND ks_rodzaj = 'PK' 
+--and dok_numer_wlasny not like 'BO%' -- czy w styczniu z BO czy bez
+and knt_pelny_numer like '5%w__' 
+order by frm_nazwa, dok_data_zaksiegowania 
+
+
+
+-- add 2018-04-24
 -- ks add rember good add param account !!!
 
 select knt_pelny_numer, ks_kwota, ks_tresc, dok_data_zaksiegowania 
