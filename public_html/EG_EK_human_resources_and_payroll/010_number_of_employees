@@ -1,4 +1,4 @@
-# 2021-09-01
+## 2021-09-01
 
 begin
 eap_globals.USTAW_konsolidacje('T');
@@ -20,7 +20,7 @@ where zat_stawka < 2800*etat
 order by frm_nazwa, sk_kod,  prc_nazwisko, prc_imie
 
 
-# 2019 - last from EK form employees who works on foll time job
+## 2019 - last from EK form employees who works on foll time job
 
 SELECT * FROM ek_zatrudnienie, ek_pracownicy
 WHERE prc_id = zat_prc_id 
@@ -30,7 +30,7 @@ AND NVL(zat_data_do, :in_day) >= :in_day
 order by PRC_NUMER ASC, PRC_NAZWISKO ASC, PRC_IMIE ASC
 
 
-# 2018
+## 2018
 --ETAT: dodaj jako kolumna w select 
 , (select SUBSTR(wsl_alias,1,3)/SUBSTR(wsl_alias,4,6) from css_wartosci_slownikow where wsl_sl_nazwa like 'TYP_ETATU' and zat_wymiar=wsl_wartosc) etat
 
@@ -74,7 +74,7 @@ order by frm_nazwa, ob_pelny_kod, typ_umowy
 
 
 
--- add k.skowronski 2005
+##  add k.skowronski 2005
 
 -- 0 UP
 -- 1 Dzielo
