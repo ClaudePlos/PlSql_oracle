@@ -1,1 +1,23 @@
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+begin
+eap_globals.USTAW_konsolidacje('T');
+end;
+
+
+SELECT frm_nazwa, prc_numer, prc_nazwisko, prc_imie, sk_kod  
+FROM ek_zatrudnienie, ek_pracownicy, css_stanowiska_kosztow, eat_firmy 
+WHERE prc_id = zat_prc_id 
+AND zat_frm_id = frm_id
+AND zat_sk_id = sk_id 
+AND zat_typ_umowy = 6
+AND zat_data_zmiany <= :in_day
+AND NVL(zat_data_do, :in_day) >= :in_day
+ANd sk_kod not like 'A%'
+order by PRC_NUMER ASC, PRC_NAZWISKO ASC, PRC_IMIE ASC
+
+
+
+select sk_kod, wap_wartosc  
+ from css_wartosci_pol, css_stanowiska_kosztow 
+where wap_id = sk_wap_id 
+ and wap_dep_id = 100026  -- rodzaj kosztu
