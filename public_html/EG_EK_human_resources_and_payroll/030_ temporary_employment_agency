@@ -1,20 +1,89 @@
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+BEGIN
+
+declare
+v_frmSTART number;
+v_kp_g_harm number;
+v_kp_g_przep number;
+v_kp_g_nocne number;
+v_kp_g_url number;
+v_kp_d_url number;
+
+begin
+
+rollback;
+
+v_frmSTART := eap_globals.ODCZYTAJ_FIRME;
+
 begin
 eap_globals.USTAW_konsolidacje('T');
 end;
 
-
-SELECT frm_nazwa, prc_numer, prc_nazwisko, prc_imie, sk_kod
-, (select wap_wartosc from css_wartosci_pol where wap_id = sk_wap_id and wap_dep_id = 100026) piatka 
-, stn_nazwa
+FOR x IN (
+-- zapytanie 
+SELECT prc_id, 
+frm_nazwa, prc_numer, prc_nazwisko, prc_imie, prc_pesel, sk_kod
+--, (select wap_wartosc from css_wartosci_pol where wap_id = sk_wap_id and wap_dep_id = 100026) piatka 
+, stn_nazwa, zat_stawka
+, (select SUBSTR(wsl_alias,1,3)/SUBSTR(wsl_alias,4,6) from css_wartosci_slownikow where wsl_sl_nazwa like 'TYP_ETATU' and zat_wymiar=wsl_wartosc) etat
 FROM ek_zatrudnienie, ek_pracownicy, css_stanowiska_kosztow, eat_firmy, zpt_stanowiska 
 WHERE prc_id = zat_prc_id 
 and zat_stn_id = stn_id
 AND zat_frm_id = frm_id
 AND zat_sk_id = sk_id 
 AND zat_typ_umowy = 6
-AND zat_data_zmiany <= :in_day
-AND NVL(zat_data_do, :in_day) >= :in_day
+AND zat_data_zmiany <= :to_day
+AND NVL(zat_data_do, :from_day) >= :from_day
 AND (select wap_wartosc from css_wartosci_pol where wap_id = sk_wap_id and wap_dep_id = 100026) in (501,502,503)
 AND (stn_nazwa like '%Sprzątacz%')
 order by PRC_NUMER ASC, PRC_NAZWISKO ASC, PRC_IMIE ASC
+)
+LOOP
+
+select kp_g_harm, kp_g_przep, kp_g_nocne, kp_g_url, kp_d_url into v_kp_g_harm, v_kp_g_przep, v_kp_g_nocne, v_kp_g_url, v_kp_d_url
+ from EK_KARTA_PRACY 
+where kp_prc_id = x.prc_id
+ and to_char(kp_data_od,'YYYY-MM') = to_char(:from_day,'YYYY-MM'); 
+
+
+insert into bctt_wyniki_raportow
+(wr_pole_1_t, wr_pole_2_t, wr_pole_3_t, wr_pole_4_t, wr_pole_5_t, wr_pole_6_t, wr_pole_7_t
+,wr_pole_1_l, wr_pole_2_l
+,wr_pole_3_l, wr_pole_4_l,wr_pole_5_l, wr_pole_6_l, wr_pole_7_l)
+values
+(x.frm_nazwa, x.prc_numer, x.prc_nazwisko, x.prc_imie, x.prc_pesel, x.sk_kod, x.stn_nazwa
+,x.zat_stawka,x.etat
+,v_kp_g_harm, v_kp_g_przep, v_kp_g_nocne, v_kp_g_url, v_kp_d_url  );
+
+
+END LOOP;
+
+
+begin
+eap_globals.USTAW_firme(v_frmSTART);
+eap_globals.USTAW_konsolidacje('N');
+end;
+
+
+end;
+
+open :kursor for 
+select 
+  wr_pole_1_t firma
+, wr_pole_2_t num
+, wr_pole_3_t nazwisko
+, wr_pole_4_t imie
+, wr_pole_5_t pesel
+, wr_pole_6_t mpk
+, wr_pole_7_t stanowisko
+, wr_pole_1_l stawka_wynag
+, wr_pole_2_l etat
+, wr_pole_3_l harm_godz
+, wr_pole_4_l przeprawc_godz
+, wr_pole_5_l nocne_godz
+, wr_pole_6_l urlop_godz
+, wr_pole_7_l urlop_dni
+from bctt_wyniki_raportow
+;
+
+END;
