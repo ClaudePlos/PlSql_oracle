@@ -3,6 +3,9 @@ select sk_kod, wap_wartosc
  from css_wartosci_pol, css_stanowiska_kosztow 
 where wap_id = sk_wap_id 
  and wap_dep_id = 100026  -- rodzaj kosztu
+ 
+ 
+ (select wap_wartosc from css_wartosci_pol where wap_id = sk_wap_id and wap_dep_id = 100026) piatka 
 
 
 100370 - frmID
