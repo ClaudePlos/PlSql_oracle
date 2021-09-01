@@ -1,4 +1,26 @@
--- 2019 - last from EK form employees who works on foll time job
+# 2021-09-01
+
+begin
+eap_globals.USTAW_konsolidacje('T');
+end;
+
+-- workers who earn lower then min 
+select a.*, 2800*etat min_etat from (
+SELECT frm_nazwa, sk_kod||' '||sk_opis sk_kod, prc_numer, prc_nazwisko, prc_imie, zat_stawka
+, (select SUBSTR(wsl_alias,1,3)/SUBSTR(wsl_alias,4,6) from css_wartosci_slownikow where wsl_sl_nazwa like 'TYP_ETATU' and zat_wymiar=wsl_wartosc) etat
+FROM ek_zatrudnienie, ek_pracownicy, css_stanowiska_kosztow, eat_firmy 
+WHERE prc_id = zat_prc_id 
+and zat_frm_id = frm_id
+AND zat_typ_umowy = 0
+and zat_sk_id = sk_id 
+AND zat_data_zmiany <= :in_day
+AND NVL(zat_data_do, :in_day) >= :in_day
+order by PRC_NUMER ASC, PRC_NAZWISKO ASC, PRC_IMIE ASC) a
+where zat_stawka < 2800*etat
+order by frm_nazwa, sk_kod,  prc_nazwisko, prc_imie
+
+
+# 2019 - last from EK form employees who works on foll time job
 
 SELECT * FROM ek_zatrudnienie, ek_pracownicy
 WHERE prc_id = zat_prc_id 
@@ -8,7 +30,7 @@ AND NVL(zat_data_do, :in_day) >= :in_day
 order by PRC_NUMER ASC, PRC_NAZWISKO ASC, PRC_IMIE ASC
 
 
--- 2018
+# 2018
 --ETAT: dodaj jako kolumna w select 
 , (select SUBSTR(wsl_alias,1,3)/SUBSTR(wsl_alias,4,6) from css_wartosci_slownikow where wsl_sl_nazwa like 'TYP_ETATU' and zat_wymiar=wsl_wartosc) etat
 
