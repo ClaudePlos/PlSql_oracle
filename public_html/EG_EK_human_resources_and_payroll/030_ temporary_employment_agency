@@ -1,4 +1,3 @@
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 BEGIN
 
 declare
@@ -8,6 +7,10 @@ v_kp_g_przep number;
 v_kp_g_nocne number;
 v_kp_g_url number;
 v_kp_d_url number;
+v_kp_g_n50 number;
+v_kp_g_n100 number;
+v_kp_g_url_inw number;
+v_kp_d_url_inw number;
 
 begin
 
@@ -40,20 +43,35 @@ order by PRC_NUMER ASC, PRC_NAZWISKO ASC, PRC_IMIE ASC
 )
 LOOP
 
-select kp_g_harm, kp_g_przep, kp_g_nocne, kp_g_url, kp_d_url into v_kp_g_harm, v_kp_g_przep, v_kp_g_nocne, v_kp_g_url, v_kp_d_url
+-- get data from karta pracy
+select kp_g_harm, kp_g_przep, nvl(kp_g_nocne,0)+nvl(kp_g_nocne_dod,0), nvl(kp_g_url,0), nvl(kp_d_url,0), nvl(kp_g_n50,0)+nvl(kp_g_n50_dod,0), nvl(kp_g_n100,0)+nvl(kp_g_n100_dod,0) 
+  into v_kp_g_harm, v_kp_g_przep, v_kp_g_nocne, v_kp_g_url, v_kp_d_url, v_kp_g_n50, v_kp_g_n100
  from EK_KARTA_PRACY 
 where kp_prc_id = x.prc_id
  and to_char(kp_data_od,'YYYY-MM') = to_char(:from_day,'YYYY-MM'); 
+
+-- sprawdzam czy nie ma urlopu dod dla inwalidy
+begin
+SELECT AB_DNI_WYKORZYSTANE,AB_GODZINY_WYKORZYSTANE 
+ INTO v_kp_d_url_inw, v_kp_g_url_inw
+ FROM EK_ABSENCJE 
+ WHERE ab_rda_id IN (select ga_rda_id from ek_grupy_absencji where ga_dg_kod = 'URL_BIL') 
+ and trunc(ab_data_od,'MONTH') <= last_day(:to_day) and ab_data_do >= :from_day and ab_prc_id = x.prc_id
+ and ab_rda_id = 100062;
+exception when others then
+  v_kp_d_url_inw := 0;
+  v_kp_g_url_inw := 0;
+end;
 
 
 insert into bctt_wyniki_raportow
 (wr_pole_1_t, wr_pole_2_t, wr_pole_3_t, wr_pole_4_t, wr_pole_5_t, wr_pole_6_t, wr_pole_7_t
 ,wr_pole_1_l, wr_pole_2_l
-,wr_pole_3_l, wr_pole_4_l,wr_pole_5_l, wr_pole_6_l, wr_pole_7_l)
+,wr_pole_3_l, wr_pole_4_l,wr_pole_5_l, wr_pole_6_l, wr_pole_7_l, wr_pole_8_l, wr_pole_9_l, wr_pole_10_l, wr_pole_11_l)
 values
 (x.frm_nazwa, x.prc_numer, x.prc_nazwisko, x.prc_imie, x.prc_pesel, x.sk_kod, x.stn_nazwa
 ,x.zat_stawka,x.etat
-,v_kp_g_harm, v_kp_g_przep, v_kp_g_nocne, v_kp_g_url, v_kp_d_url  );
+,v_kp_g_harm, v_kp_g_przep, v_kp_g_nocne, v_kp_g_url-v_kp_g_url_inw, v_kp_d_url-v_kp_d_url_inw, v_kp_g_n50, v_kp_g_n100, v_kp_g_url_inw, v_kp_d_url_inw );
 
 
 END LOOP;
@@ -83,6 +101,10 @@ select
 , wr_pole_5_l nocne_godz
 , wr_pole_6_l urlop_godz
 , wr_pole_7_l urlop_dni
+, wr_pole_8_l nadlicz50
+, wr_pole_9_l nadlicz100
+, wr_pole_10_l url_dod_godz
+, wr_pole_11_l url_dod_dni
 from bctt_wyniki_raportow
 ;
 
