@@ -11,6 +11,8 @@ v_kp_g_n50 number;
 v_kp_g_n100 number;
 v_kp_g_url_inw number;
 v_kp_d_url_inw number;
+v_kp_g_opieka number;
+v_kp_d_opieka number;
 
 begin
 
@@ -21,6 +23,8 @@ v_frmSTART := eap_globals.ODCZYTAJ_FIRME;
 begin
 eap_globals.USTAW_konsolidacje('T');
 end;
+
+
 
 FOR x IN (
 -- zapytanie 
@@ -50,28 +54,41 @@ select kp_g_harm, kp_g_przep, nvl(kp_g_nocne,0)+nvl(kp_g_nocne_dod,0), nvl(kp_g_
 where kp_prc_id = x.prc_id
  and to_char(kp_data_od,'YYYY-MM') = to_char(:from_day,'YYYY-MM'); 
 
--- sprawdzam czy nie ma urlopu dod dla inwalidy
-begin
-SELECT AB_DNI_WYKORZYSTANE,AB_GODZINY_WYKORZYSTANE 
- INTO v_kp_d_url_inw, v_kp_g_url_inw
+-- sprawdzam czy nie ma urlopu dod dla inwalidy / opieki dla dziecka / 
+v_kp_g_url_inw := 0;
+v_kp_d_url_inw := 0;
+v_kp_g_opieka := 0;
+v_kp_d_opieka := 0;
+FOR ab IN ( 
+SELECT ab_rda_id, AB_GODZINY_WYKORZYSTANE, AB_DNI_WYKORZYSTANE 
  FROM EK_ABSENCJE 
  WHERE ab_rda_id IN (select ga_rda_id from ek_grupy_absencji where ga_dg_kod = 'URL_BIL') 
  and trunc(ab_data_od,'MONTH') <= last_day(:to_day) and ab_data_do >= :from_day and ab_prc_id = x.prc_id
- and ab_rda_id = 100062;
-exception when others then
-  v_kp_d_url_inw := 0;
-  v_kp_g_url_inw := 0;
-end;
+ and ab_rda_id in (100062, 1)
+) LOOP
+ if ab.ab_rda_id = 100062 then
+  v_kp_g_url_inw := v_kp_g_url_inw + ab.AB_GODZINY_WYKORZYSTANE;
+  v_kp_d_url_inw := v_kp_d_url_inw + ab.AB_DNI_WYKORZYSTANE;
+ elsif ab.ab_rda_id = 1 then
+  v_kp_g_opieka := v_kp_g_opieka + ab.AB_GODZINY_WYKORZYSTANE;
+  v_kp_d_opieka := v_kp_d_opieka + ab.AB_DNI_WYKORZYSTANE;
+ else 
+  null;
+ end if;
+END LOOP;
 
 
 insert into bctt_wyniki_raportow
 (wr_pole_1_t, wr_pole_2_t, wr_pole_3_t, wr_pole_4_t, wr_pole_5_t, wr_pole_6_t, wr_pole_7_t
 ,wr_pole_1_l, wr_pole_2_l
-,wr_pole_3_l, wr_pole_4_l,wr_pole_5_l, wr_pole_6_l, wr_pole_7_l, wr_pole_8_l, wr_pole_9_l, wr_pole_10_l, wr_pole_11_l)
+,wr_pole_3_l, wr_pole_4_l,wr_pole_5_l, wr_pole_6_l, wr_pole_7_l, wr_pole_8_l, wr_pole_9_l, wr_pole_10_l, wr_pole_11_l, wr_pole_12_l, wr_pole_13_l)
 values
 (x.frm_nazwa, x.prc_numer, x.prc_nazwisko, x.prc_imie, x.prc_pesel, x.sk_kod, x.stn_nazwa
 ,x.zat_stawka,x.etat
-,v_kp_g_harm, v_kp_g_przep, v_kp_g_nocne, v_kp_g_url-v_kp_g_url_inw, v_kp_d_url-v_kp_d_url_inw, v_kp_g_n50, v_kp_g_n100, v_kp_g_url_inw, v_kp_d_url_inw );
+,v_kp_g_harm, v_kp_g_przep, v_kp_g_nocne
+, v_kp_g_url-v_kp_g_url_inw--v_kp_g_opieka
+, v_kp_d_url-v_kp_d_url_inw--v_kp_d_opieka
+, v_kp_g_n50, v_kp_g_n100, v_kp_g_url_inw, v_kp_d_url_inw, v_kp_g_opieka, v_kp_d_opieka );
 
 
 END LOOP;
@@ -105,6 +122,8 @@ select
 , wr_pole_9_l nadlicz100
 , wr_pole_10_l url_dod_godz
 , wr_pole_11_l url_dod_dni
+, wr_pole_12_l opieka_dz_godz
+, wr_pole_13_l opieka_dz_dni
 from bctt_wyniki_raportow
 ;
 
