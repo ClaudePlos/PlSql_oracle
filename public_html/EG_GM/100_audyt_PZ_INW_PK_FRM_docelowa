@@ -4,8 +4,20 @@ begin
 eap_globals.USTAW_konsolidacje('T');
 end;
 
--- weryfikacja czy kwota z PZ i PK są takie same 
+-- 1. weryfikacja czy kwota z PZ i PK są takie same 
 select a.*, kwota_z_PK_firma_docelowa - kwota_Z_pz_INWEST spr from (
 select sum(ks_kwota) kwota_z_PK_firma_docelowa, Substr(ks_tresc, 0, 7) num, (select sum(pdok_wartosc) from GMT_POZYCJE_DOKUMENTOW where pdok_dok_id = Substr(ks_tresc, 0, 7)) kwota_Z_pz_INWEST
  from KGT_KSIEGOWANIA where ks_dok_id = 9622005 -- numer PK z firmy docelowej
 group by Substr(ks_tresc, 0, 7)) a
+
+
+-- 2. porównuje pozycje z faktur z pozycjami z PZ
+-- a. Pozycje z faktury
+select pf_tow_id, pf_ilosc, pf_cena from FA_POZYCJE where pf_dok_id = 9629613 -- faktura w INWEST do firmy docelowej
+order by 1
+
+-- b. pozycje z PZ
+select pdok_tow_id, pdok_ilosc_rea, pdok_cena 
+from GMT_POZYCJE_DOKUMENTOW where pdok_dok_id in (select distinct Substr(ks_tresc, 0, 7) dok_id from KGT_KSIEGOWANIA where ks_dok_id = 9622005) -- PZ z konta 301-01-011100 z PK
+order by 1
+
