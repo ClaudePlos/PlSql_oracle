@@ -1,0 +1,11 @@
+Task: Firma docelowa, różnica na koncie 301-01-011100 w danym miesiacu
+
+begin
+eap_globals.USTAW_konsolidacje('T');
+end;
+
+-- weryfikacja czy kwota z PZ i PK są takie same 
+select a.*, kwota_z_PK_firma_docelowa - kwota_Z_pz_INWEST spr from (
+select sum(ks_kwota) kwota_z_PK_firma_docelowa, Substr(ks_tresc, 0, 7) num, (select sum(pdok_wartosc) from GMT_POZYCJE_DOKUMENTOW where pdok_dok_id = Substr(ks_tresc, 0, 7)) kwota_Z_pz_INWEST
+ from KGT_KSIEGOWANIA where ks_dok_id = 9622005 -- numer PK z firmy docelowej
+group by Substr(ks_tresc, 0, 7)) a
