@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ## 2021-09-01
-
+<pre>
 begin
 eap_globals.USTAW_konsolidacje('T');
 end;
@@ -19,18 +19,18 @@ AND NVL(zat_data_do, :in_day) >= :in_day
 order by PRC_NUMER ASC, PRC_NAZWISKO ASC, PRC_IMIE ASC) a
 where zat_stawka < 2800*etat
 order by frm_nazwa, sk_kod,  prc_nazwisko, prc_imie
-
+</pre>
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ## 2019 - last from EK form employees who works on foll time job
-
+<pre>
 SELECT * FROM ek_zatrudnienie, ek_pracownicy
 WHERE prc_id = zat_prc_id 
 AND zat_typ_umowy = 0
 AND zat_data_zmiany <= :in_day
 AND NVL(zat_data_do, :in_day) >= :in_day
 order by PRC_NUMER ASC, PRC_NAZWISKO ASC, PRC_IMIE ASC
-
+</pre>
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ## 2018
