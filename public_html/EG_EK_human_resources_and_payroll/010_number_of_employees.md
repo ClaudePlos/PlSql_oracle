@@ -35,11 +35,13 @@ order by PRC_NUMER ASC, PRC_NAZWISKO ASC, PRC_IMIE ASC
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ## 2018
 --ETAT: dodaj jako kolumna w select 
+<pre>
 , (select SUBSTR(wsl_alias,1,3)/SUBSTR(wsl_alias,4,6) from css_wartosci_slownikow where wsl_sl_nazwa like 'TYP_ETATU' and zat_wymiar=wsl_wartosc) etat
-
+</pre>
 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 -- dokładnie il prac w firmie
+<pre>
 select frm_nazwa, ob_pelny_kod, typ_umowy, count(prc_id) prac from (
 --- na UZ
 SELECT distinct PRC_ID,PRC_NUMER,PRC_NAZWISKO,PRC_IMIE,PRC_NIP,PRC_DATA_UR,PRC_PESEL,PRC_DOWOD_OSOB, frm_nazwa, ob_pelny_kod
@@ -73,7 +75,7 @@ order by PRC_numer
 )
 group by ob_pelny_kod, frm_nazwa, typ_umowy
 order by frm_nazwa, ob_pelny_kod, typ_umowy 
-
+</pre>
 
 
 
@@ -87,6 +89,7 @@ order by frm_nazwa, ob_pelny_kod, typ_umowy
 
 ----- 1. 
 ----- number of employees (contract)
+<pre>
 select count(*) from ek_pracownicy, ek_zatrudnienie 
 where zat_prc_id=prc_id
 and ek_zatrudnienie.zat_data_zmiany = (
@@ -132,10 +135,12 @@ and ek_zatrudnienie.zat_data_zmiany = (
 	 or ek_zatrudnienie.zat_data_do is null)
 	 and zat_typ_umowy = 0
 group by ob_pelny_kod
+</pre>
 
 ---***********************************************************************
 -- 2. 
 -- number of employees (freelance)
+<pre>
 select * from ek_zatrudnienie, ek_pracownicy, ek_etapy_umowy  where
 (NVL(zat_data_do, to_date('2099', 'YYYY')) >= to_date('2014-03', 'YYYY-MM')
 and zat_data_zmiany <= last_day(to_date('2014-03', 'YYYY-MM')))
@@ -155,10 +160,11 @@ and zat_prc_id = prc_id;
 	 and sk_id = zat_sk_id
 	 AND ( (zat_typ_umowy in (1,2,3,10))) AND zat_data_zmiany <= :ddo AND NVL(zat_data_do, '2099-01-01') >= :dod
 	 order by sk_kod, prc_nazwisko, zat_data_zmiany
-
+</pre>
 
 --***************************************************************************
 --- Umowy o pracę - wielofirmowo - etaty - obKod - na dzien
+<pre>
 begin
 eap_globals.USTAW_konsolidacje('T');
 end;
@@ -183,11 +189,12 @@ and ek_zatrudnienie.zat_data_zmiany = (
 	 or ek_zatrudnienie.zat_data_do is null)
 	 and zat_typ_umowy = 0
 group by ob_pelny_kod
-
+</pre>
 
 
 
 --- wyliczanie etatów rocznie - GOOD
+<pre>
 declare 
 v_mm varchar2(2);
 v_txt varchar2(4000);
@@ -238,3 +245,4 @@ END LOOP;--end2;
 --
 END LOOP; --end1
 end;
+</pre>
