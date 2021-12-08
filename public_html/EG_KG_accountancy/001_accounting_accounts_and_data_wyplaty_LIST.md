@@ -1,3 +1,4 @@
+<pre>
 select frm_nazwa, knt_pelny_numer, knt_nazwa, ks_tresc
 , (
 select max(lst_data_wyplaty) from ek_dok_lst, ek_listy 
@@ -31,3 +32,4 @@ and dok_numer_wlasny not like 'BO%'
 )
 group by dok_id, frm_nazwa, knt_pelny_numer, knt_nazwa, ks_tresc, ks_dok_data_zaksiegowania
 order by frm_nazwa, ks_dok_data_zaksiegowania
+</pre>
