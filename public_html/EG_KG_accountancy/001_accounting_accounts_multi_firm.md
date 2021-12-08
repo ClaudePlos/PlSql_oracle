@@ -1,5 +1,5 @@
--- k.skowronski(ClaudePlos) add 2016-10-17
--- report about accountiong on the accounts in multi-firm 
+### k.skowronski(ClaudePlos) add 2016-10-17
+### report about accountiong on the accounts in multi-firm 
 
 <pre>
 select frm_nazwa, knt_pelny_numer, knt_nazwa, ks_tresc, ks_dok_data_zaksiegowania 
