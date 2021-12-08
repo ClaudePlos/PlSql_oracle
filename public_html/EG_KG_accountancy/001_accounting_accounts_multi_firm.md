@@ -1,6 +1,7 @@
--- k.skowronski(ClaudePlos) add 20016-10-17
+-- k.skowronski(ClaudePlos) add 2016-10-17
 -- report about accountiong on the accounts in multi-firm 
 
+<pr>
 select frm_nazwa, knt_pelny_numer, knt_nazwa, ks_tresc, ks_dok_data_zaksiegowania 
 , nvl(sum(WN),0) WN
 , nvl(sum(MA),0) MA  
@@ -28,3 +29,4 @@ and dok_numer_wlasny not like 'BO%'
 )
 group by frm_nazwa, knt_pelny_numer, knt_nazwa, ks_tresc, ks_dok_data_zaksiegowania
 order by frm_nazwa, ks_dok_data_zaksiegowania
+</pre>
