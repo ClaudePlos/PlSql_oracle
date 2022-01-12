@@ -32,18 +32,30 @@ ROZWIAZANIE TEZ ROBIMY w GRUDNIU za poprzedni rok:
 -- podaj frmId, dateksiegowania na miesiąc listopad tak by dokument zaksiegował sie w grudniu
 -- idFirmy, daj na luty, idPK do rozwiązania, numer PK do rozwiązania
 begin
- naprzod.NAP_EK_REZERWA.rozwiaz_rezerwe_w_firmie(300203, '2021-11-30', 9532340, 'PK/0108/12/20' ); 
+ naprzod.NAP_EK_REZERWA.rozwiaz_rezerwe_w_firmie(300318, '2021-11-30', 9532430, 'PK/0074/12/20' ); 
 end;
 
 commit
 
 
 2021:
+JOL-MARK Sp. z o.o. PK/0120/12/21 PK/0121/12/21 i PK/0125/12/21 dla POSTĘP Sp. z o.o
+NAPRZÓD SERVICE SP. Z O.O. PK/0061/12/21 PK/0062/12/21
+Triomed Sp. z o.o.  PK/0104/12/21 PK/0105/12/21
+NAPRZÓD CATERING SP. Z O.O. PK/0025/12/21 PK/0026/12/21
+Naprzód Marketing PK/0080/12/21 PK/0081/12/21 i PK/0082/12/21 dla VENDI CLEANING SP. Z O.O. i PK/0083/12/21 dla Vendi Marketing Sp. z o.o.
+
+ 
+
+
 CATERMED
 HOSPITAL
+IZAN
 
 
+select * from kgt_dokumenty where dok_id = 12051512
 
+update kgt_dokumenty set dok_frm_id = 300313  where dok_id = 12051512
 
 
 select * from ek_zatrudnienie 
@@ -85,6 +97,12 @@ select dok_def_0, DOK_OPIS from kgt_dokumenty where upper(dok_opis) like '%ROZLI
 UPDATE kgt_dokumenty SET dok_def_0 = 'REZ.URL.ROZWIAZANIE'  where upper(dok_opis) like '%ROZLICZENIE REZERWY%'
 
 COMMIT
+
+
+
+
+
+
 
 
 </pre>
