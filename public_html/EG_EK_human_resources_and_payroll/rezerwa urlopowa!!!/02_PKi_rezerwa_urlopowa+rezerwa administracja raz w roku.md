@@ -1,6 +1,21 @@
 <pre>
 
 --2021-01-07
+
+
+--- wykaz firm gdzie jest rezerwa administracja:
+begin
+eap_globals.USTAW_konsolidacje('T');
+end;
+
+select frm_nazwa, dok_numer_wlasny, dok_opis from kgt_dokumenty, eat_firmy 
+where dok_frm_id = frm_id and dok_def_0 like 'REZ%' and upper(dok_opis) like '%ADMIN%' and to_char(dok_Data_zaksiegowania,'YYYY-MM') = '2020-12'
+order by 1
+
+
+select * from eat_firmy where frm_nazwa like '%Mark%'
+
+
 -- W styczniu rezerwa jest robiona dla ADMINISTRACJI. 
 1. ZAWIAZANIE - PK dodajemy na ostatni dzień starego roku. 
 
@@ -15,27 +30,19 @@ i z akcji menu generujemy.
 ROZWIAZANIE TEZ ROBIMY w GRUDNIU za poprzedni rok: 
 -- rozwiązanie trzeba zrobic z plsql bo moesiace zamkniete 
 -- podaj frmId, dateksiegowania na miesiąc listopad tak by dokument zaksiegował sie w grudniu
-
-
+-- idFirmy, daj na luty, idPK do rozwiązania, numer PK do rozwiązania
 begin
- naprzod.NAP_EK_REZERWA.rozwiaz_rezerwe_w_firmie(300200, '2020-11-30', 8352307 ); 
+ naprzod.NAP_EK_REZERWA.rozwiaz_rezerwe_w_firmie(300203, '2021-11-30', 9532340, 'PK/0108/12/20' ); 
 end;
 
 commit
 
 
-
---- wykaz firm gdzie jest rezerwa administracja:
-begin
-eap_globals.USTAW_konsolidacje('T');
-end;
-
-select frm_nazwa, dok_numer_wlasny, dok_opis from kgt_dokumenty, eat_firmy 
-where dok_frm_id = frm_id and dok_def_0 like 'REZ%' and upper(dok_opis) like '%ADMIN%' and to_char(dok_Data_zaksiegowania,'YYYY-MM') = '2019-12'
-order by 1
+2021:
+CATERMED
+HOSPITAL
 
 
-select * from eat_firmy where frm_nazwa like '%Mark%'
 
 
 
@@ -78,11 +85,6 @@ select dok_def_0, DOK_OPIS from kgt_dokumenty where upper(dok_opis) like '%ROZLI
 UPDATE kgt_dokumenty SET dok_def_0 = 'REZ.URL.ROZWIAZANIE'  where upper(dok_opis) like '%ROZLICZENIE REZERWY%'
 
 COMMIT
-
-
-
-
-
 
 
 </pre>
