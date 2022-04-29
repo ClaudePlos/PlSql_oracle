@@ -1,0 +1,15 @@
+select * 
+from GMT_POZYCJE_DOKUMENTOW 
+where pdok_dok_id = 12286765
+
+select * from (
+select pdok_tow_id, (select tow_nazwa from css_towary where tow_id = pdok_tow_id) nazwa, pdok_ilosc_dys, pdok_ilosc_rea, pdok_cena, pdok_wartosc wart_WZ
+, (select pdok_wartosc from gmt_pozycje_dokumentow g2 where g2.pdok_id = g1.PDOK_DEF_1) wart_pz
+, pdok_wartosc - (select pdok_wartosc from gmt_pozycje_dokumentow g2 where g2.pdok_id = g1.PDOK_DEF_1) spr
+, (select dok_numer_wlasny from kgt_dokumenty, gmt_pozycje_dokumentow g3 where g3.pdok_id = g1.PDOK_DEF_1 and g3.pdok_dok_id = dok_id) pz
+from GMT_POZYCJE_DOKUMENTOW g1
+where pdok_dok_id = 12286765)
+where spr != 0
+
+
+select pdok_wartosc from gmt_pozycje_dokumentow where pdok_id = 2340304
