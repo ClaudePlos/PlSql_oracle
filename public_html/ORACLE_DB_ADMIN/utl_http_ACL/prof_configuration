@@ -1,0 +1,44 @@
+--- hr_utl_http.xml
+BEGIN
+DBMS_NETWORK_ACL_ADMIN.CREATE_ACL (
+acl => 'hr_utl_http.xml',
+description => 'Allow mail',
+principal => 'PUBLIC',  --- you can assign PUBLIC or user like 'HR'
+is_grant => TRUE,
+privilege => 'connect',
+start_date => SYSTIMESTAMP,
+end_date => NULL);
+COMMIT;
+END;
+
+
+BEGIN
+DBMS_NETWORK_ACL_ADMIN.ASSIGN_ACL (
+acl => 'hr_utl_http.xml',
+host => '192.168.192.5', -- specify the host IP address 
+lower_port => 8085,       -- specify the port range lower value (* for all)
+upper_port => 8085);      -- specify the port range higher value
+COMMIT;
+END;
+
+BEGIN
+DBMS_NETWORK_ACL_ADMIN.ADD_PRIVILEGE(
+acl => 'hr_utl_http.xml',
+principal => 'PUBLIC',  --if you want user like 'HR' 
+is_grant => true,
+privilege => 'connect');
+COMMIT;
+END;
+
+BEGIN
+DBMS_NETWORK_ACL_ADMIN.ADD_PRIVILEGE(
+acl => 'hr_utl_http.xml',
+principal => 'PUBLIC',  --if you want user like 'HR' 
+is_grant => true,
+privilege => 'resolve');
+COMMIT;
+END;
+
+SELECT * FROM DBA_NETWORK_ACLS;
+
+SELECT ACL,  PRINCIPAL, PRIVILEGE, IS_GRANT, INVERT FROM DBA_NETWORK_ACL_PRIVILEGES;
