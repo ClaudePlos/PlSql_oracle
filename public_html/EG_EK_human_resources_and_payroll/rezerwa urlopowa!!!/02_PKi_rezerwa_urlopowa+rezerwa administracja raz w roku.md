@@ -1,6 +1,9 @@
 <pre>
 
---2021-01-07
+
+
+
+--2023-01-03
 
 
 --- wykaz firm gdzie jest rezerwa administracja:
@@ -9,7 +12,7 @@ eap_globals.USTAW_konsolidacje('T');
 end;
 
 select frm_nazwa, dok_numer_wlasny, dok_opis from kgt_dokumenty, eat_firmy 
-where dok_frm_id = frm_id and dok_def_0 like 'REZ%' and upper(dok_opis) like '%ADMIN%' and to_char(dok_Data_zaksiegowania,'YYYY-MM') = '2020-12'
+where dok_frm_id = frm_id and dok_def_0 like 'REZ%' and upper(dok_opis) like '%ADMIN%' and to_char(dok_Data_zaksiegowania,'YYYY-MM') = '2021-12'
 order by 1
 
 
@@ -32,7 +35,7 @@ ROZWIAZANIE TEZ ROBIMY w GRUDNIU za poprzedni rok:
 -- podaj frmId, dateksiegowania na miesiąc listopad tak by dokument zaksiegował sie w grudniu
 -- idFirmy, daj na luty, idPK do rozwiązania, numer PK do rozwiązania
 begin
- naprzod.NAP_EK_REZERWA.rozwiaz_rezerwe_w_firmie(300318, '2021-11-30', 9532430, 'PK/0074/12/20' ); 
+ naprzod.NAP_EK_REZERWA.rozwiaz_rezerwe_w_firmie(300317, '2022-11-30', 12051328, 'PK/0105/12/21' ); 
 end;
 
 commit
@@ -97,12 +100,6 @@ select dok_def_0, DOK_OPIS from kgt_dokumenty where upper(dok_opis) like '%ROZLI
 UPDATE kgt_dokumenty SET dok_def_0 = 'REZ.URL.ROZWIAZANIE'  where upper(dok_opis) like '%ROZLICZENIE REZERWY%'
 
 COMMIT
-
-
-
-
-
-
 
 
 </pre>
