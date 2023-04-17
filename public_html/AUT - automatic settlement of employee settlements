@@ -5,6 +5,9 @@ end;
 
 
 
+nzp_laczenie_platnosci
+
+
 SELECT * FROM NZV_BLK_ROZDEK_PLATNOSCI_PODL 
 WHERE ((((( pl_f_rozliczona = 'N' AND pl_f_anulowana = 'N' AND pl_dok_id_child IS NULL ) AND (pl_kwota_waluty_wn < 0 OR pl_kwota_waluty_ma > 0)) 
 AND (pl_roz_id IN (SELECT roz_id FROM nzt_rozrachunki WHERE roz_wal_id = 1 AND roz_rp_rok = 2023))) 
