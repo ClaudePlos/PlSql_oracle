@@ -7,6 +7,15 @@ end;
 
 nzp_laczenie_platnosci
 
+-- połączy płatności ale kwotowo muszą się zgadzać i muszą mieć tą samą nazwę rozrachunku 
+begin
+ nzp_platnosci.rozbij_i_polacz_platnosci(
+ 	 15831599,
+ 	  15831571, 
+ 	    null
+ 	  );
+end;
+
 --- rozłączenie płatnoci  
 select pl_id from nzt_platnosci where rowid = 'AAAbsgAA6AABtvPAAT'
 begin
