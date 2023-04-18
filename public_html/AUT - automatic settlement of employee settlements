@@ -7,6 +7,12 @@ end;
 
 nzp_laczenie_platnosci
 
+--- rozłączenie płatnoci  
+select pl_id from nzt_platnosci where rowid = 'AAAbsgAA6AABtvPAAT'
+begin
+nzp_platnosci.rozlacz_platnosci(15831571, true);
+end ;
+
 
 SELECT * FROM NZV_BLK_ROZDEK_PLATNOSCI_PODL 
 WHERE ((((( pl_f_rozliczona = 'N' AND pl_f_anulowana = 'N' AND pl_dok_id_child IS NULL ) AND (pl_kwota_waluty_wn < 0 OR pl_kwota_waluty_ma > 0)) 
