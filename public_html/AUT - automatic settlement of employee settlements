@@ -1,26 +1,14 @@
+
+
+
+
 begin
 eap_globals.USTAW_firme(300201);
 eap_globals.USTAW_konsolidacje('N');
 end;
 
 
-
-nzp_laczenie_platnosci
-
--- połączy płatności ale kwotowo muszą się zgadzać i muszą mieć tą samą nazwę rozrachunku 
-begin
- nzp_platnosci.rozbij_i_polacz_platnosci(
- 	 15831599,
- 	  15831571, 
- 	    null
- 	  );
-end;
-
---- rozłączenie płatnoci  
-select pl_id from nzt_platnosci where rowid = 'AAAbsgAA6AABtvPAAT'
-begin
-nzp_platnosci.rozlacz_platnosci(15831571, true);
-end ;
+SELECT OS_USERNAME, USERNAME, USERHOST, TERMINAL, TIMESTAMP, OWNER, OBJ_NAME, ACTION, ACTION_NAME, NEW_OWNER, NEW_NAME, OBJ_PRIVILEGE, SYS_PRIVILEGE, ADMIN_OPTION, GRANTEE, AUDIT_OPTION, SES_ACTIONS, LOGOFF_TIME, LOGOFF_LREAD, LOGOFF_PREAD, LOGOFF_LWRITE, LOGOFF_DLOCK, COMMENT_TEXT, SESSIONID, ENTRYID, STATEMENTID, RETURNCODE, PRIV_USED, CLIENT_ID, ECONTEXT_ID, SESSION_CPU, EXTENDED_TIMESTAMP, PROXY_SESSIONID, GLOBAL_UID, INSTANCE_NUMBER, OS_PROCESS, SCN, SQL_BIND, SQL_TEXT, OBJ_EDITION_NAME, DBID FROM dba_audit_trail;
 
 
 SELECT * FROM NZV_BLK_ROZDEK_PLATNOSCI_PODL 
@@ -30,3 +18,193 @@ AND (pl_knt_id IN (SELECT knt_id FROM kg_konta WHERE knt_f_rozrachunkowe = 'T' A
 AND (pl_knt_id = 15199954)) AND (pl_roz_id IN (SELECT roz_id FROM nzt_rozrachunki WHERE roz_prc_id = 115442 ) OR (1=1) )
 and to_char(pl_data,'YYYY-MM') = '2023-02'
  order by PL_DATA_WYMAGALNOSCI ASC, PL_DATA ASC
+ 
+ 
+ 
+ nzp_laczenie_platnosci.dorzuc_platnosci(
+  	  v_pl_id,
+	    :rozdek_ctrl.f_przelacz_rozrachunek,
+	    konfigurator_rozdek.dok_id
+	    )
+
+		
+		
+		
+		
+		nzp_laczenie_platnosci.DORZUC_PLATNOSCI
+		
+		
+		
+		
+			nzp_laczenie_platnosci.dorzuc_platnosci(
+		  	  v_pl_id,
+			    :rozdek_ctrl.f_przelacz_rozrachunek,
+			    konfigurator_rozdek.dok_id
+			    );
+				
+				
+				
+	nzp_platnosci.rozbij_i_polacz_platnosci(
+  	    v_pl_id,
+  	    v_przylaczana_pl_id, 
+  	    sprawdz_roznice_kursowa(v_pl_id, v_przylaczana_pl_id)
+  	  );			
+	  
+	
+	
+	
+	p_pl_1_id          IN   NUMBER,
+    p_pl_2_id          IN   NUMBER,
+    p_dok_id_roznica   IN   NUMBER DEFAULT NULL
+
+	
+	
+	
+begin	  
+ nzp_platnosci.ROZBIJ_I_POLACZ_PLATNOSCI(15831579, 15831571, 13230535 );
+end; 
+	  
+	  
+	  select * from nzt_platnosci where rowid = 'AAAbsgAA6AABtvPAAT'
+	  
+	  
+	  
+begin	  
+ nzp_platnosci.polacz_platnosci(15831571, 15831579, 13230535 );
+end; 
+
+
+begin 
+nzp_laczenie_platnosci.dorzuc_platnosci(
+  	  15831571,
+	    'N',
+	    13230535
+	    );
+end;	
+
+NZC_ROZ_UK)
+
+-- code 
+DECLARE 
+l_wydzielona_pl_id number;
+l_pozostala_pl_id number;
+l_pl_id number;
+l_roz_id number;
+BEGIN
+for rek in (
+select pl_id, to_char(pl_data,'YYYY-MM') pl_data, knt_pelny_numer, knt_id, roz_prc_id, pl_kwota_ma, roz_numer 
+  from nzt_platnosci 
+  left join nzt_rozrachunki on roz_id = pl_roz_id 
+  left join kg_konta on pl_knt_id = knt_id
+where pl_dok_id = 13230536
+  and roz_numer like 'GOTOW%'
+  and pl_kwota_ma < 0 
+  )
+loop
+SELECT pl_id into l_pl_id 
+  FROM NZV_BLK_ROZDEK_PLATNOSCI_PODL 
+WHERE ((((( pl_f_rozliczona = 'N' AND pl_f_anulowana = 'N' AND pl_dok_id_child IS NULL ) AND (pl_kwota_waluty_wn < 0 OR pl_kwota_waluty_ma > 0)) 
+AND (pl_roz_id IN (SELECT roz_id FROM nzt_rozrachunki WHERE roz_wal_id = 1 AND roz_rp_rok = substr(rek.pl_data,0,4)))) 
+AND (pl_knt_id IN (SELECT knt_id FROM kg_konta WHERE knt_f_rozrachunkowe = 'T' AND knt_pelny_numer LIKE rek.knt_pelny_numer))) 
+AND (pl_knt_id = rek.knt_id)) AND (pl_roz_id IN (SELECT roz_id FROM nzt_rozrachunki WHERE roz_prc_id = rek.roz_prc_id ) OR (1=1) )
+and to_char(pl_data,'YYYY-MM') = rek.pl_data
+order by PL_DATA_WYMAGALNOSCI ASC, PL_DATA ASC;
+nzp_platnosci.wydziel_abs(l_pl_id, -rek.pl_kwota_ma, l_wydzielona_pl_id, l_pozostala_pl_id );
+--
+dbms_output.put_line (l_wydzielona_pl_id);
+--update nzt_rozrachunki set roz_numer = rek.roz_numer where roz_id = (select pl_roz_id from nzt_platnosci where pl_id = l_wydzielona_pl_id);
+--
+--
+/*nzp_platnosci.rozbij_i_polacz_platnosci(
+ 	l_wydzielona_pl_id, -- l_pl_id,
+ 	  rek.pl_id, 
+ 	    null
+ 	  );*/
+end loop;
+END;
+
+commit
+
+declare
+p_rozrachunki nzp_obj_rozrachunki.t_rec_rozrachunki; 
+l_roz_id number;
+begin
+select pl_roz_id into l_roz_id from nzt_platnosci where pl_id = 15831658;
+nzp_obj_rozrachunki.ODCZYTAJ(l_roz_id,p_rozrachunki);
+p_rozrachunki.roz_numer := 'GOTOW/LPLAC/11032023';
+nzp_obj_rozrachunki.MODYFIKUJ(p_rozrachunki);
+dbms_output.PUT_LINE(p_rozrachunki.roz_numer);
+end; 
+
+begin
+nzp_obj_rozrachunki.USUN(15831628);
+end;
+
+
+nzp_platnosci.przepnij (p_pl_id => v_pl_id_wydzielona, p_roz_id => v_roz_id);
+
+
+commit
+
+rollback
+
+begin
+nzp_platnosci.rozbij_i_polacz_platnosci(
+ 	l_wydzielona_pl_id, -- l_pl_id,
+ 	  rek.pl_id, 
+ 	    null
+ 	  );
+end;
+
+nzp_laczenie_platnosci.dorzuc_platnosci(
+  	  v_pl_id,
+	    :rozdek_ctrl.f_przelacz_rozrachunek,
+	    konfigurator_rozdek.dok_id
+	    );
+
+
+
+update nzt_rozrachunki set roz_numer = 'GOTOW/LPLAC/11032023' where roz_id = (select pl_roz_id from nzt_platnosci where pl_id = 15831610);
+
+
+nzp_tymczasowo
+
+
+begin
+ nzp_platnosci.rozbij_i_polacz_platnosci(
+ 	 15831658,
+ 	  15831571, 
+ 	    null
+ 	  );
+end;
+
+GOTOW/LPLAC/11032023
+GOTOW/LPLAC/10032023
+
+
+--- rozłączenie płatnoci  
+select * from nzt_platnosci where rowid = 'AAAbsgAA6AABtwPAAA'
+
+AAAbsgAA6AABtwPAAK
+AAAbsgAA6AABtvPAAT
+
+select * from nzt_rozrachunki where roz_id in (
+
+select * from nzt_platnosci where pl_id in (15831662,15831571)
+
+)
+
+begin
+nzp_platnosci.rozlacz_platnosci(15831571, true);
+end ;
+
+
+commit	
+
+select * from nzt_rozrachunki where roz_id in (15831662)
+
+select * from nzt_platnosci where pl_roz_id = 15831662
+
+
+
+RA-20000: (33560800): Płatności ( ID = 15831653 i ID = 15831571 ) nie należą do tego samego rozrachunku a próbuje się je połączyć
