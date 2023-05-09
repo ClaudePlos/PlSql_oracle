@@ -1,0 +1,66 @@
+
+
+begin
+eap_globals.USTAW_firme(300203);
+eap_globals.USTAW_konsolidacje('N');
+end;
+
+
+-- 920
+declare 
+ v_pl_id number;
+ v_
+begin
+for rek in (
+select pl_id, to_char(pl_data,'YYYY-MM') pl_data, knt_pelny_numer, knt_id, roz_prc_id, pl_kwota_ma, roz_numer  
+from nzt_platnosci
+ left join nzt_rozrachunki on roz_id = pl_roz_id 
+ left join kg_konta on pl_knt_id = knt_id
+where roz_numer like 'GOTOW%'
+  and pl_dok_id = 13400333
+  and pl_f_anulowana = 'N'
+)
+loop
+v_pl_id := null;
+begin
+ SELECT pl_id, pl_kwota_waluty_wn, pl_kwota_waluty_ma into  v_pl_id,  
+  FROM NZV_BLK_ROZDEK_PLATNOSCI_PODL 
+WHERE ((((( pl_f_rozliczona = 'N' AND pl_f_anulowana = 'N' AND pl_dok_id_child IS NULL ) AND (pl_kwota_waluty_wn < 0 OR pl_kwota_waluty_ma > 0)) 
+AND (pl_roz_id IN (SELECT roz_id FROM nzt_rozrachunki WHERE roz_wal_id = 1 AND roz_rp_rok = substr(rek.pl_data,0,4)))) 
+AND (pl_knt_id IN (SELECT knt_id FROM kg_konta WHERE knt_f_rozrachunkowe = 'T' AND knt_pelny_numer LIKE rek.knt_pelny_numer))) 
+AND (pl_knt_id = rek.knt_id)) AND (pl_roz_id IN (SELECT roz_id FROM nzt_rozrachunki WHERE roz_prc_id = rek.roz_prc_id ) OR (1=1) )
+order by PL_DATA_WYMAGALNOSCI ASC, PL_DATA ASC; 
+exception when others then
+ null;
+end;
+--
+if  v_pl_id is not null then  
+dbms_output.put_line (rek.pl_id||'; '||v_pl_id||'; '||rek.pl_); 
+end if;
+end loop;  
+end;
+  
+  
+  
+  select pl_id, to_char(pl_data,'YYYY-MM') pl_data, knt_pelny_numer, knt_id, roz_prc_id, pl_kwota_ma, roz_numer  
+from nzt_platnosci
+ left join nzt_rozrachunki on roz_id = pl_roz_id 
+ left join kg_konta on pl_knt_id = knt_id
+where roz_numer like 'GOTOW%'
+  and pl_dok_id = 13400333
+  and pl_f_anulowana = 'N'
+  and pl_id = 16083477
+  
+  
+  
+  
+SELECT *
+  FROM NZV_BLK_ROZDEK_PLATNOSCI_PODL 
+WHERE ((((( pl_f_rozliczona = 'N' AND pl_f_anulowana = 'N' AND pl_dok_id_child IS NULL ) AND (pl_kwota_waluty_wn < 0 OR pl_kwota_waluty_ma > 0)) 
+AND (pl_roz_id IN (SELECT roz_id FROM nzt_rozrachunki WHERE roz_wal_id = 1 AND roz_rp_rok = 2023))) 
+AND (pl_knt_id IN (SELECT knt_id FROM kg_konta WHERE knt_f_rozrachunkowe = 'T' AND knt_pelny_numer LIKE '234-819290-01'))) 
+AND (pl_knt_id = 15264689)) AND (pl_roz_id IN (SELECT roz_id FROM nzt_rozrachunki WHERE roz_prc_id = 372002 ) OR (1=1) )
+--and to_char(pl_data,'YYYY-MM') = rek.pl_data
+order by PL_DATA_WYMAGALNOSCI ASC, PL_DATA ASC;  
+
+
