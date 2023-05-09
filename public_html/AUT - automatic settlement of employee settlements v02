@@ -36,7 +36,7 @@ exception when others then
 end;
 --
 if  v_pl_id is not null then  
-dbms_output.put_line (rek.pl_id||'; '||v_pl_id||'; '||rek.pl_); 
+dbms_output.put_line (rek.pl_id||'; '||v_pl_id||'; '||v_kwota_wn||'; '||v_kwota_ma ); 
 end if;
 end loop;  
 end;
