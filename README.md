@@ -8,3 +8,10 @@ select ad_rdok_kod, AD_NAZWA, PAU_ID, PAU_AD_ID, PAU_TP_ID, PAU_NAZWA, PAU_UTWOR
 from KGT_AUTOMATY_DEKRETUJACE, KGT_POZYCJE_AUTOMATU 
 where AD_ID = pau_ad_id and PAU_KOD like '%KSOSOB%' 
 </pre>
+
+<pre>
+--004. Good search in package
+SELECT DISTINCT owner, NAME, TYPE
+FROM ( SELECT * FROM all_source WHERE UPPER(text) LIKE '%CSS_STOPY_ODSETKOWE%') 
+</pre>
+
