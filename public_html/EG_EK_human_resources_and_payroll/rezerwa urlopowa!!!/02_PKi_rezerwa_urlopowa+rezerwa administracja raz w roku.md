@@ -27,7 +27,7 @@ select * from eat_firmy where frm_nazwa like '%Mark%'
 ) where kontrybucja != 1 -- ustawienie aby tylko obiekty bez administracji
 ) where kontrybucja = 1 -- bez administracji 
 
-i z akcji menu generujemy. 
+i z akcji menu generujemy. I opis: REZERWA URLOPOWA 2023 ADMINISTRACJA
 
 
 ROZWIAZANIE TEZ ROBIMY w GRUDNIU za poprzedni rok: 
