@@ -10,6 +10,11 @@ where AD_ID = pau_ad_id and PAU_KOD like '%KSOSOB%'
 </pre>
 
 <pre>
+ --001. good flash back
+select * from nazwa_tabeli AS OF TIMESTAMP TO_TIMESTAMP('20-10-2010 12:47:00','dd-mm-yyyy hh24:mi:ss') --- dalej mozna podac whera
+</pre>
+
+<pre>
 --004. Good search in package
 SELECT DISTINCT owner, NAME, TYPE
 FROM ( SELECT * FROM all_source WHERE UPPER(text) LIKE '%CSS_STOPY_ODSETKOWE%') 
